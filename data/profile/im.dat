@@ -1,0 +1,7 @@
+Charset,UTF-8
+__system_settings_version__,2
+IPMessenger.Broadcast.0,255.255.255.255
+IPMessenger.Broadcast.1,ff02::1
+IPMessenger.Broadcast.2,ff02::1
+IPMessenger.Broadcast.Num,3
+__system_written_flag_do_not_remove__,written

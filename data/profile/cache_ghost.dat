@@ -1,0 +1,24 @@
+-version,5
+*begin,0
+*path,C:\Users\theco\Downloads\ghost\Cosmic_Bob_AC\
+*cache_desc,C:\Users\theco\Downloads\ghost\Cosmic_Bob_AC\ghost\master\descript.txt
+*cache_filetime,644349814
+craftmanw,Cosmic
+craftmanurl,http://www.ashido.com/ukagaka/walkthrough.html //replace
+name,Bob
+sakuraname,Bob
+icon,gt_template.ico
+*end,0
+*begin,1
+*path,C:\Users\theco\Downloads\ghost\emily4\
+*cache_desc,C:\Users\theco\Downloads\ghost\emily4\ghost\master\descript.txt
+*cache_filetime,596835674
+craftmanw,[SSPBT/GL03B]Emily Development Team
+craftmanurl,http://ssp.shillest.net/
+homeurl,http://ssp.shillest.net/ghost/emily4/
+name,Emily/Phase4.5
+sakuraname,Emily
+keroname,Teddy
+icon,icon.ico
+default.balloon.name,emily4
+*end,1

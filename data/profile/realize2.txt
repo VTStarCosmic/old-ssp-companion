@@ -1,0 +1,5 @@
+Charset,UTF-8
+ghost,BobBobCosmic_Bob_AC\60516992782856767773306
+ghost,Emily/Phase4.5EmilyTeddyemily4\46767773676765943083
+balloon,SSPデフォルト+ssp\60516992782856767773286
+balloon,Balloon for Emily/P4emily4\46767773686765943063
