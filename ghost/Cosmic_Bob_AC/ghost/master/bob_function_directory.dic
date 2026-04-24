@@ -1,0 +1,164 @@
+﻿/*Function Directory
+Okay, here's a file I don't believe I've seen in any ghost I've studied before, but I want for my own convenience, as well as for purposes of reusability.
+The idea here is that any function starting with 'On' can be called from any directory declared in yaya.txt, correct? So for testing, decluttering, and in case
+I make other ghosts where I want to reuse custom ones I've made or check for errors in official ones that do not work for some reason, this file will contain
+as many as possible.
+...it also makes my life easier because I like having multiple screens for comparison open and not losing my spot; oops.
+
+CONTENTS:
+-Time functions (because there is no need to rewrite a billion of them just because a variable's not global)
+-Array management functions (how I run and pull most conversations, whether through menus, boot/end, etc.)
+-Custom functions
+
+BE CAREFUL OF WHAT YOU TOUCH IN HERE. There should be very little dialogue here, if any; this is all hardcore nerd stuff about crucial coding.
+
+Cos Notes:
+-PLEASE REFER TO WHERE THE FUNCTIONS ARE USED SO YOU CAN TRACK THEM MORE EASILY!
+-Go back and re-evaluate these comments because idk wtf I'm talking about.
+-Eat chocolate.
+-Make angst pudding.
+*/
+
+
+
+/*Custom functions*/
+
+//ANIMAL CROSSING RELATED
+
+//Since the zodiac is on your player card in ACNL and mentioned in villager dialogue, I thought it'd be a nifty addition here.
+//The return value of this function is the variable 'zodiac''s value.
+OnZodiacPull //used in bootend?
+{
+	if bornmonth == 3 && bornday  >= 21 //March Aries
+	{
+		zodiac = "Aries"
+	}
+	elseif bornmonth == 4 && bornday <= 19 //April Aries
+	{
+		zodiac = "Aries"
+	}
+	elseif bornmonth == 4 && bornday >= 20 //April Taurus
+	{
+		zodiac = "Taurus"
+	}
+	elseif bornmonth == 5 && bornday <= 20 //May Taurus
+	{
+		zodiac = "Taurus"
+	}
+	elseif bornmonth == 5 && bornday >= 21 //May Gemini
+	{
+		zodiac = "Gemini"
+	}
+	elseif bornmonth == 6 && bornday <= 20 //June Gemini
+	{
+		zodiac = "Gemini"
+	}
+	elseif bornmonth == 6 && bornday >= 21 //June Cancer
+	{
+		zodiac = "Cancer"
+	}
+	elseif bornmonth == 7 && bornday <= 22 //July Cancer
+	{
+		zodiac = "Cancer"
+	}
+	elseif bornmonth == 7 && bornday >= 23 //July Leo
+	{
+		zodiac = "Leo"
+	}
+	elseif bornmonth == 8 && bornday <= 22 //August Leo
+	{
+		zodiac = "Leo"
+	}
+	elseif bornmonth == 8 && bornday >= 23 //August Virgo
+	{
+		zodiac = "Virgo"
+	}
+	elseif bornmonth == 9 && bornday <= 22 //September Virgo
+	{
+		zodiac = "Virgo"
+	}
+	elseif bornmonth == 9 && bornday >= 23 //September Libra
+	{
+		zodiac = "Libra"
+	}
+	elseif bornmonth == 10 && bornday <= 22 //October Libra
+	{
+		zodiac = "Libra"
+	}
+	elseif bornmonth == 10 && bornday >= 23 //October Scorpio
+	{
+		zodiac = "Scorpio"
+	}
+	elseif bornmonth == 10 && bornday <= 21 //November Scorpio
+	{
+		zodiac = "Scorpio"
+	}
+	elseif bornmonth == 11 && bornday >= 22 //November Sagittarius
+	{
+		zodiac = "Sagittarius"
+	}
+	elseif bornmonth == 12 && bornday <= 21 //December Sagittarius
+	{
+		zodiac = "Sagittarius"
+	}
+	elseif bornmonth == 12 && bornday >= 22 //December Capricorn
+	{
+		zodiac = "Capricorn"
+	}
+	elseif bornmonth == 1 && bornday <= 19 //January Capricorn
+	{
+		zodiac = "Capricorn"
+	}
+	elseif bornmonth == 1 && bornday >= 20 //January Aquarius
+	{
+		zodiac = "Aquarius"
+	}
+	elseif bornmonth == 2 && bornday <= 18 //February Aquarius <3
+	{
+		zodiac = "Aquarius"
+	}
+	elseif bornmonth == 2 && bornday >= 19 //February Pisces
+	{
+		zodiac = "Pisces"
+	}
+	else //March Pisces
+	{
+		zodiac = "Pisces"
+	}
+	zodiac
+}
+
+
+/*Meta's functions*/
+
+OnCharDialogue
+{
+	if ISFUNC("Character_%(reference0)")
+	{
+		_array = EVAL("Character_%(reference0)")
+		_text = _array[RAND(ARRAYSIZE(EVAL("Character_%(reference0)")))]
+		"%(_text)"
+	}
+	else
+	{
+		"An error has occurred in OnCharDialogue.\e"
+	}
+}
+
+//Stat check
+OnMTDataPull
+{
+	"This function works.\e"
+}
+
+//Literally ALL the stats check
+OnMTDataPull_Comprehensive
+{
+	"Date-time:\n"
+	--
+	"%(passmin)\n%(passsec)\n%(dayslot)\n%(timeslot)\n%(seasonslot)\n%(userbirthday)\n"
+	--
+	"Other stuff:\n"
+	--
+	"%(angstpoints)\n%(MTTrust)\n%(ALLOFTHEMEMES)\n"
+}

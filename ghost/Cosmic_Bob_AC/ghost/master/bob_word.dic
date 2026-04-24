@@ -1,0 +1,209 @@
+﻿/*word.dic
+
+This file appears to be started for the sole purpose of shoving short arrays here, likely to avoid that little nonoverlap issue I chatted about in the AITalk files.
+Multiple arrays in files means you don't have to worry about them overlapping, so keeping them all here means you don't have to worry about that.
+Also a great place to set up little variables/envelopes to use later, like animations/SFX/complicated font|dialogue setup/etc. HEAR THAT, FUTURE COS?
+
+Mainly I'll use this for array lists on locations/randomized characters or stuff. Of course, that requires that I actually use them. Oops. Maybe just random things,
+like different names of songs/bands/places/cities/food/hobbies/etc...or it can still be used to shove the menu arrays or other short dialogue arrays in. Really, just any
+random thing to insert in a sentence. Also don't forget that you can nest random items inside other arrays here too!
+
+Celtic, Celestia, I know you want to mod the Meta. That was in my contract for creating this XD So feel free to create your own lists here; just please, PLEASE for your own sakes,
+make sure they don't share names with any other ones I listed here or you will crash the program.
+*/
+
+//okay so maybe I could even put that computer list quip here...or somewhere. It's so random I may as well throw it here, or with the AITalk array
+
+
+//Note to dev: Bob's hometown is randomly generated, but perhaps he can mention these, paired with town fruit? So double array...hmmm...
+townname
+{
+	"Heather"
+	"Sylva"
+}
+
+
+
+
+vendingmachine
+{
+	"chocolate bar"
+	"Pop-Start" //I WENT THERE AND THERE IS NO GOING BACK
+	"cheesy cracker pack"
+	"candy bar"
+	"chips"
+	"cereal bar"
+}
+
+breakfast
+{
+	"waffles"
+	"cereal"
+	"pancakes"
+	"oatmeal"
+	"fruit"
+}
+
+lunch
+{
+	"sandwich"
+	"%(vendingmachine)"
+	"cookies"
+	"pizza"
+	//wow we are really having a healthy lunch
+}
+
+dinner
+{
+	"hot dog"
+	"taco"
+	"hamburger"
+	//-shot-
+	"steak"
+	"pizza"
+	"salad"
+	"spaghetti"
+	"lasagna"
+	//I was about to say "chicken", but...
+}
+
+snack //snacks - 'a'
+{
+	"parfait"
+	"trifle"
+	"cookie"
+	"brownie"
+	"milkshake"
+}
+
+snack_2 //snacks - 'some'
+{
+	"s'mores"
+	"chips"
+	"butter crackers"
+}
+
+townfruit
+{
+	"a pear"
+	"some cherries"
+	"some grapes"
+	"a peach"
+	"an apple"
+	"an orange"
+}
+
+fortune
+{
+	"to wear a shirt for great wealth"
+}
+
+rumor
+{
+	//maybe have these triggered by certain conditions instead...
+	"bellionaire"
+	"flower lover"
+	"good friend"
+	"town traveler"
+}
+
+furniture
+{
+	"balloon couch"
+	"balloon chair"
+	"regal vanity"
+	"paper tiger"
+	"retro TV"
+	"CD player"
+	"polka dot stool"
+	"neutral wall"
+	"sleek lamp"
+	"sleek bed"
+	"modern chair"
+	"toadstool chair"
+	"lovely bed"
+}
+
+cookieitem
+{
+	"1UP Mushroom"
+	"? Block"
+	"Fire Bar"
+	"Arwing"
+}
+
+appreciationdaytitles
+{
+	"Bob"
+	"Gummi Crackers"
+	"Pancake"
+}
+
+//Villager Names!
+
+
+
+grumpyvillager
+{
+	"T-Bone"
+	"Apollo"
+}
+
+
+
+
+
+foodshops
+{
+	"Charbii's"
+	"The Re-Treat"
+}
+
+Dededemovie //really just any TV show. 
+{
+	"Dinosaurs Unleashed"
+	"Future City Subway"
+	"The Ghost House"
+	"The Tree"
+	"Jajo's Extreme Adventures"
+}
+
+book
+{
+	"The Snowflake Knight"
+	"Tales of the Ancients"
+}
+
+locations
+{
+	"White Wafers"
+	"Onion Ocean"
+	"Nutty Noon"
+	"Sacred Square"
+	"Dedede's castle"
+	"Dream Land"
+}
+
+/*NESTED ARRAYS! These are arrays that contain subarrays inside them! Good for matching pairs.*/
+/*NOTE: Since these are comma delimited, make sure that all your arrays are declared as arrays or nonoverlap to avoid your dialogue being mistaken
+as these types of arrays! Otherwise it will cause the dialogue to only display what's before or after the comma!
+
+...okay so I PROPOSE a theory. The nonoverlap tag may stop double envelopes like this from functioning properly...test this later, future Cos...
+*/
+
+Character_Specialty
+{
+	"Dedede,Dream Land legends"
+	"Dedede,ruling a country"
+	"Bandana Dee,spear fishing"
+	"Kirby,socializing"
+}
+
+/*-------------------------------------------*/
+
+//This is a pretty interesting function that looks like it's run every time unit...or at least, I'd assume. I'm not sure what 'person' does here, but
+//I think it's odd that this is in the word file? Whatever the case, the tutorial said not to touch haha.
+ On_\person
+{
+ 	person
+}

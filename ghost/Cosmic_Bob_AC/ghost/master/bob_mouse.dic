@@ -1,0 +1,121 @@
+﻿/*mouse.dic
+*/
+
+//This is a bunch of code determining who the mouse is over. Don't touch any of it.
+OnMouseMove
+ {
+  	if nowmode != "QUIZ"
+ 	{
+		//reference3 determines the character in question
+		if reference3 == 0 //if the character is 0, aka the main character
+		{
+			MouseMoveSakura
+		}
+		else //if the character isn't 0, then it must be the side character.
+		{
+			MouseMoveKero
+		}
+	}
+ }
+ 
+//The petting function for your main character.  
+MouseMoveSakura
+ {
+	if reference4 != "" //ignore
+ 	{
+ 		stroke++ 
+ 		if stroke >= 40 
+		{
+ 			stroke = 0 //resetting the stroke count
+			if reference4 == "Head" //do you remember the names of the areas you set up for your collisions in surfaces.txt? 
+ 			{
+				"\0\s[0]This is some petting dialogue.\e"
+				"\0\s[0]This is some more petting dialogue.\e"
+ 			}
+ 			elseif reference4 == "Face" 
+ 			{
+ 				"\0\s[0]This is petting dialogue for my face.\e"
+ 			}
+			
+ 		}
+	}
+ 	else
+	{
+ 		// If the mouse isn't over the ghost, it'll zero out the stroke value.
+		stroke = 0
+ 	}
+}
+
+/*Don't think I'll add a secondary character to Meta, so just commenting this out in case I come back to it.*/
+/*MouseMoveKero
+ {
+	if reference4 != ""
+ 	{
+ 		stroke++
+ 		if stroke >= 40
+		{
+			stroke = 0
+			if reference4 == "Face" //Put in the name of your collision area you set up for your secondary character here.
+ 			{
+				"\1\s[10]This is a face touching dialogue.\e"
+				"\1\s[10]This is another face touching dialogue.\e"
+				"\1\s[10]This is yet another face touching dialogue.\e"
+				//Replace this dialogue with your secondary character's dialogue.
+ 			}
+			elseif reference4 == "Point" //Like above, put in the name of another collision you set up in surfaces.txt for the secondary character. 
+			{
+				"\1\s[10]This is a point touching dialogue since I don't really have a head, being a triangle.\e"
+				"\1\s[10]This is another point touching dialogue.\e"
+				"\1\s[10]This is yet another point touching dialogue.\e"
+				//Replace this dialogue as appropriate.
+			}	
+ 		}
+	}
+ 	else
+	{
+ 		// If the mouse isn't over the ghost, it'll zero out the stroke value.
+		stroke = 0
+ 	}
+}*/
+
+//This is set up much like OnMouseMove above, except this is checking to see if the user is double clicking on the ghost. You don't need to touch any of this. 
+OnMouseDoubleClick
+{	
+ 	if reference3 == 0 //if the character is 0, aka your main character
+	{
+		MouseDoubleClickSakura
+ 	}
+	else
+ 	{
+ 		MouseDoubleClickKero
+	}
+}
+
+//Cos ghost ideas: how would it be for only a certain condition, I wonder...? then he could have fleas
+
+MouseDoubleClickSakura
+{
+ 	if reference4 == "Head" || reference4 == "Face" 
+	{
+		"\0\s[0]This is the hitting dialogue.\w8\1\s[15]lol\w8\0\s[9]\n\n[half]Shut up.\e"
+	}
+	else
+ 	{
+		//Otherwise, if the user doubleclicks somewhere else on the character, they will open their menu as detailed in menu.dic.
+ 		OpenSakuraMenu
+	}
+}
+ 
+//okay but if you give the star a menu you WILL NEED THIS
+
+/*MouseDoubleClickKero
+{
+ 	if reference4 == "Face" 
+	{
+		"\1\s[10]This is hitting dialogue.\w8\0\s[5]ha ha\w8\1\s[19]\n\n[half]Quiet.\e"
+ 	}
+	else //Otherwise if you click anywhere else on Triangle's body
+ 	{
+		OpenKeroMenu //This will open his menu set up in menu.dic.
+	}
+}*/

@@ -1,0 +1,255 @@
+﻿//AITalk.dic
+/*If you've seen zarla's tutorial, you'll notice immediately that this file is MUCH different than hers.
+Throughout this ghost, I've pulled the dialogue away from the code, so debugging the actual code and 
+writing the dialogue are easier to do separately. It also makes the code look nicer to me as a software person.
+
+I put the dialogue in a separate .dic file, and split it into arrays. This provides the same functionality.
+If you don't wanna be a cool CS kid, though, you CAN just leave everything in RandomTalk : nonoverlap if you
+want. It will work the same. JUST MAKE SURE IT SAYS 'NONOVERLAP'!!!!!!*/
+
+//To-Do: Anything random achivements here, or lunch-hour stuff.
+
+OnAITalk
+{
+	AiTalk //for some reason, OnAiTalk has already been defined in the template code somewhere, so calling this one OnAiTalk won't work...but where, and why?
+}
+//wait, theoretically this AI talk does nothing at all, then...?
+//IF PEOPLE LEFT COMMENTS ON THEIR STUFF, LIFE WOULD BE SO MUCH BETTER!
+
+/*This function is set up differently than the Emily4.5 one...It functions essentially the same.*/
+AiTalk
+{
+	if RAND(100) < communicateratio { 
+	//nobody commented, so I don't know where StartCommunicate is or what it does.
+ 		StartCommunicate
+	}
+	//actually handle conversations
+ 	else {
+ 		if mikireflag == 0 { //if the ghosts aren't overlapping
+			//Normal talk, no chain
+			if CHAIN.IDName == "" { 
+ 				lastTalk = RandomTalk
+			}
+			//if there is a chain
+			else { 
+				lastTalk = ChainTalk
+			}
+			lastTalk //printing dialogue. This is an interesting approach, because lastTalk is the variable the ghost uses when it's asked to repeat itself.
+			//The ghost actually sets the new dialogue as the old dialogue before it's even displayed, and then putting 'lastTalk' here displays it.
+		}
+ 		else { 
+		MikireTalk //if they're overlapping
+ 		}
+	}
+}
+
+//SOFTWARE ENGINEER NERD RANT
+
+/*So this is the first huge difference in my code compared to what I remember being in the template, because I'm pretty sure I built this from the ground up.
+This is how Emily4.5 creates her dialogue arrays...or at least, as close as I can get it, with all the quirks in this code.
+The idea behind this is to create one huge array that encompasses every possible piece of dialogue that's available in AITalk at that moment. If you don't have 
+something unlocked, it's not loaded into memory. The storage savings aren't huge since it's just text, but the dev team behind SSP seem very dedicated to saving 
+every possible bit of storage they can. Lightweight application, after all.
+
+However, for you as a programmer, this helps because it lets you conveniently pack everything into separate files so you don't have to dig through it here.
+I'm the type of person who likes to have a few tabs spread out on the top, or not have to mess with code when I just wanna write dialogue, so that's the main
+appeal here.  You'll see that a lot throughout my code.  It's a very big point for me to separate code and dialogue so that in case I thought of some bonus
+dialogue, I don't have to dig very far to get it, as it should be in a file with just dialogue as opposed to the actual code.
+
+With that out of the way, let me explain the process here.  All the conditions needed to trigger stuff are called in this array. If the condition is
+met, or the array exists, the array will be added to this bigger array. This creates a pool of dialogue. You'll see "parallel EVAL()" a lot.
+"parallel" is an SSP command that creates a duplicate of an existing array, in this case, the dialogue array you wrote. "EVAL()" evaluates whatever's
+in the (), if it exists. While this is normally bad programming practice in serious systems, this is the best way to do it in SSP, if Emily4.5 is any
+indication. See the titles of my arrays in the brackets below? As long as you keep them consistent, you can add variables in with them that are always 
+pulled! Like you can see for month; every month's dialogue is in an array formatted like "Month_Array_January", for example.  You can see the dialogue 
+files I've created in the rest of the 'master' file.
+
+So which is better, loading it all in randomtalk to start, or doing it this way?  You might save a few nanoseconds with my way, but if you're doing this 
+with no previous programming experience, I'd recommend using zarla's tutorial. If you want to take this as a serious programming project, though,
+you should probably stick with this approach, as it's what you'll see in industry.
+
+The only warning I'll give to serious CS people is that in industry, you'll want some checks on your EVAL statements and user inputs to strip formatting. For.
+Security purposes. I'm assuming this is built into SSP since the paid devs don't check for it, but on your own, you best watch yourself.*/
+
+AITalkArrayCreator //this is supposed to be defined as an array or nonoverlap array, but for some reason it seems happy without it. I've noticed that a lot.
+{
+	_season = GetSeasonSlot
+	_timeslot = GetTimeSlot
+	_month = GETTIME[1]
+	
+	/*Date-time related arrays*/
+	
+	if RAND(100) < 30 //to keep the date/time stuff from being called too often
+	{
+	parallel EVAL("timeslot_Array_%(_timeslot)") //WORKS
+	parallel EVAL("Seasonal_Array_%(_season)") //WORKS
+	parallel EVAL("Month_Array_%(_month)") //WORKS
+	parallel EVAL("DayOfWeek_Array_%(weekday)") //WORKS
+	}
+	
+	/*Items*/
+	
+	parallel ItemList
+	
+	/*Any other arrays you might make that are triggered before/after/related to other things*/
+	
+	/*Random arrays (Conditionals) (Mood, Trust, Items, etc.)*/
+	
+	parallel EVAL("Mood_Array_%(mood)") //WORKS 
+	
+	if MTTrust > 1 //WORKS
+	{
+		parallel MTTrust_Array_2
+	}
+	if MTTrust > 2 //WORKS
+	{
+		parallel MTTrust_Array_3
+	}
+	
+	if holidelay >= 7
+	{
+		parallel holidelayDialogue
+	} 
+	
+	parallel Item_Array //WORKS
+	
+	/*Random arrays (Nonconditional)*/
+	//duplicating this a few times so he doesn't say special dialogue too often. Don't know if it works, but...it looks like it?
+	//okay maybe instead of this, have where RAND(100) > 40, this triggers, if not, something else
+	parallel MTAI_Array
+	parallel MTAI_Array
+	parallel MTAI_Array
+	parallel MTAI_Array //okay so that note about stuff being nonoverlap is SUPER IMPORTANT HERE; test some of the other arrays to make sure they work too with multiple dialogue
+}
+
+/*When creating arrays, BE CERTAIN THAT ANY SOLO ARRAYS ARE NONOVERLAP TO ENSURE THAT YOUR DIALOGUE IS NOT CONSUMED INTO A VOID. If you're uncertain whether
+there are other arrays, make it nonoverlap just to be safe.
+I believe the default ghost's word.dic file has some nonoverlap arrays, but I'm not for certain they can be called in AITalk...worth investigating.
+It's worth noting they come with their own On functions as well. If those arrays are called, it'd probably be through an EVAL(On_%(nameofarray)), if you
+were interested in searching for them.*/
+
+RandomTalk : nonoverlap
+{
+	if Curr_Event == "sickbob"
+	{
+		parallel SickTalk
+	}
+	else
+	{
+		AITalkArrayCreator
+	}
+	
+	/*--Chains
+	"\0\s[0]This is the first part of a chained dialogue.\w8\1\s[10]Second part to come when we next speak.\e:chain=firstchain"
+	*/
+	
+	/*if nowshell == "default_shell" 
+	{}*/
+	
+}//END OF RANDOMTALK : NONOVERLAP
+
+//from the dialogue in AITalk from firstchain or secondchain. You can link as long as you reasonably want...hmmm what would I use them for.
+/*firstchain
+{{CHAIN
+	"\0\s[0]Here is the second part of the chain.\w8\1\s[10]Will there be more?\e:chain=end"
+}}CHAIN*/
+
+//This function runs at the end of every minute! If you have time-related things to update, this is a great place to do them.
+OnMinuteChange
+{
+	timeslot = GetTimeSlot //this updates the timeslot.
+	--
+ 	if minute == 0 && hour != 0 && hour != 12
+	{
+		"It's %(hour12) 'o clock.\e"
+		candycount += 1 //resets when you can give him candy, should you have him open
+	}
+	elseif mikireflag == 1 //this is the check for them being offscreen. I wonder, if this was originally in an elseif too, was there something after it that was deleted...?
+	{
+		MikireTalk
+	}
+	else
+	{
+		//all my specific time arrays I made. You can make them all with if-else's here but mmmmmmmh, I'm a programmer. Versatility, yo.
+		if ISFUNC("timeArray_%(hour)_%(minute)")
+		{
+			parallel EVAL("timeArray_%(hour)_%(minute)")
+		}
+		elseif ISFUNC("wtimeArray_%(weekday)_%(hour)_%(minute)")
+		{
+			parallel EVAL("wtimeArray_%(weekday)_%(hour)_%(minute)")
+		}
+	}
+}
+
+OnSecondChange
+{
+	if passsec == 60
+ 	{
+	 	passsec = 0
+ 		passmin = passmin + 1
+	}
+ 	else
+ 	{
+	 	passsec = passsec + 1
+	}
+	if mikireflag == 1 && reference1 == 0
+	{
+			EndMikireTalk
+ 	}
+	mikireflag = reference1
+	if reference2 == 1
+	{
+ 		//For when characters are overlapping. If you do the stuff with Meta's star-soul, you'll need to include this. If not, just leave it.
+ 		//". . .\4\e"
+	}
+}
+
+//Note: MikireTalk is for off-the-screen stuff.
+MikireTalk
+{
+	"Hey! (%nickname)!  What're you doing?  I'm getting squished!\e"
+	//Ctrl-Shift-F12 to reset, hotkey.
+}
+
+//For when they're back on screen.
+EndMikireTalk
+ {
+	"...thank you, I suppose...\e"
+ }
+
+//You can put if statements in OnSurfaceRestore to make exceptions for certain poses, or to make sure that once they're in a certain pose, they stay in that pose. 
+//You can also use OnSurfaceRestore to clean up things that might be left on the screen, primarily from using p[number]\s[] to call up other objects or characters.
+
+OnSurfaceRestore
+ {
+ 	//if reference0 == 4 || reference0 == 6 //This is checking what poses they are in. This looks to see if Girl is in pose 4 or pose 6, since she is reference0.
+ 	//{
+ 	//"\1\s[10]You're in a sad pose.\w8\0\s[0]I'll go back to normal then.\e"
+ 	//}
+ 	//elseif reference1 == 14 || reference1 == 16 //This is doing the same but for Triangle, since he's reference1. It looks to see if he's in pose 14 or post 16.
+ 	//{
+ 	//"\0\s[0]You look sad.\w8\1\s[10]I'll go back to normal.\e"
+ 	//}
+ 	//else
+ 	//{
+	"\0\s[0]\e"
+	//}
+ }
+
+//These are the hotkeys for the ghost...hmmmm, wonder if I should do anything special with them... 
+OnKeyPress
+{
+	if reference0 == "t"
+	{
+		OnAiTalk
+	}
+	elseif reference0 == "r"
+	{
+		OnLastTalk
+	}
+	elseif reference0 == "f1"
+	{
+		"\![open,readme]"
+	}
+}

@@ -1,0 +1,355 @@
+﻿/*Special events directory
+
+
+I'm thinking all of these will involve their own menus, or at least modifications to items.
+Menu addition--AddSpecEvent function that'll check for each one specifically
+also make sure none of them overlap? should be easy to just choose one in BootEnd
+
+*/
+
+/*Event Rolling
+Event priorities are:
+0-Birthdays
+1-In game holiday
+2-Sick
+3-Random side event/lack of event
+
+Birthdays are prioritized in booting. I'm not sure whether it would be safer to include them as separate events, or all in one, but
+for my purposes, they will be included as general events. This means that should the user's birthday be on a holiday, Bob will only
+acknowledge the birthday instead of the holiday. This IS how villager birthdays work, so maybe it's how they work in-game as well?
+I think player birthdays are separate events...Either way, unless I come up with a way to integrate them both well somehow, this is
+how I'll handle them for now.
+
+This consists of two parts: the array of events, and the event-rolling function. Each event also has a corresponding dialogue array to go with it.
+*/
+
+
+//note to self--put everything in AITalk nonconditional into MTTrust >= 0 so it's drawn in the proper ratio
+
+//put all this in the function directory once it's been checked.
+
+//ORDER OF OPERATION -> Events should be pulled first so mood can be set!
+OnNewEventPull
+{
+	/*The goal of this function is rather computer-sciency compared to the below function that I'll hopefully
+	have commented out.  If this works, the idea is that instead of pulling events by permanent if statements,
+	there's an array for each year that contains all the current dates of the holidays. Now, since most events
+	have permanent dates in game, I won't have to change much. However, this allows for me to handle things
+	like Easter and such more easily because I won't have to dig up the if statements here every time.*/
+	_ep = EventArray2019
+	_Evdate = _ep[0]
+	_Evname = _ep[1]
+	//then use %() to call
+	"date is %(_Evdate). %(_Evname).\e"
+	//to here, calling this function works. Now let's see about this...
+	_comparedate = "%(month)%(day)"
+	"%(_comparedate)"
+	//test this tomorrow; if it works, set up an if statement to assign the proper string value to the months/days
+	//or do you even need to? 12 as 1/2 wouldn't come up on its own because even with the 12th you'd have a month in front of it...
+	//no, the problem would be for events like 11/6 or 1/16.
+	
+}
+
+//this is one thing I'm really not a fan of in SSP. Had this been in another language, I could have reused this function for the day too.
+//alas, because you can't call a function on a specific variable (or "pass it") and it has to be hardcoded, I can't think of a convenient way around it.
+strform_month 
+{
+	if month == 1
+	{
+		smonth = "01"
+	}
+	elseif month == 2
+	{
+		smonth = "02"
+	}
+	elseif month == 3
+	{
+		smonth = "03"
+	}
+	elseif month == 4
+	{
+		smonth = "04"
+	}
+	elseif month == 5
+	{
+		smonth = "05"
+	}
+	elseif month == 6
+	{
+		smonth = "06"
+	}
+	elseif month == 7
+	{
+		smonth = "07"
+	}
+	elseif month == 8
+	{
+		smonth = "08"
+	}
+	elseif month == 9
+	{
+		smonth = "09"
+	}
+	else //double digits fit the format
+	{
+		smonth = month
+	}
+}
+
+
+EventArray2019
+{
+	"0116,newleaf"
+	"0202,groundhog"
+}
+
+
+OnEventPull
+{
+	/*OH BOY HERE WE GO. Since I can't design this the same as my other ghost and run
+	holidays alongside RNG events (which I don't think is good practice anyway), I have
+	to enter all holidays in here. Which is better for ones that are multiple days! */
+	
+	/*...actually, I could use &&'s to make region specific holidays by having users
+	pick their regions on first boot. Hmmm...I don't know enough about each holiday to write dialogue 
+	for Bob on it though...*/
+	
+	/*Idea:
+	if month == 4 && day >= 24 && it's sunday
+	{CurrEvent = "bunnyday"?}
+	Test this out. You just gotta be sure that it doesn't accidentally repeat itself every year,
+	but you can do that with a trigger, or a refresher by comparing years
+	*/
+	
+	
+	if month == 1 && day >= 16 //trees turn green
+	{
+		Curr_Event = "newleaf" //...they went there that's the actual event name
+	}
+	elseif month == 2 && day == 2
+	{
+		Curr_Event = "groundhog"
+		holidelay = 0
+	}
+	//Lunar New Year goes here but putting every date for the next idk how long would take up way too much space
+	elseif month == 2 && day == 14
+	{
+		Curr_Event = "valentine"
+		holidelay = 0
+	}
+	elseif month == 2 && day == 27 //Festivale is variable date, but I set one here
+	{
+		Curr_Event = "festivale"
+		holidelay = 0
+	}
+	elseif month == 2 && day == 29
+	{
+		Curr_Event = "leapyear"
+		holidelay = 0
+	}
+	elseif month == 2 && day > 25 //grass turns green. Only mentioned if it's not Festivale or leap year
+	{
+		Curr_Event = "newgrass"
+	}
+	elseif month == 3 && day == 17
+	{
+		Curr_Event = "shamrock"
+		holidelay = 0
+	}
+	//Crap how am I gonna do Bunny Day
+	elseif month == 4 && day < 11 //cherry trees bloom
+	{
+		Curr_Event = "cherryblossom"
+	}
+	elseif month == 4 && day == 22
+	{
+		Curr_Event = "earthday"
+		holidelay = 0
+	}
+	elseif month == 4 && day == 30 //assigned a date to Weeding Day
+	{
+		Curr_Event = "weed"
+		holidelay = 0
+	}
+	//Mother's Day
+	//Father's Day
+	elseif month == 6 && day == 21
+	{
+		Curr_Event = "summersolstice"
+		holidelay = 0
+	}
+	elseif month == 6 && day > 15 //rainy season part 1
+	{
+		Curr_Event = "rainy"
+	}
+	elseif month == 7 && day < 6 //rainy season part 2
+	{
+		Curr_Event = "rainy"
+	}
+	elseif month == 8
+	{
+		Curr_Event = "tan"
+	}
+	//Labor Day
+	/*You know, for these variable ones, I could probably make an array to check against with the elseif condition labordaytrigger == 1 or smth*/
+	//Explorer's Day
+	elseif month == 10 && day == 31
+	{
+		Curr_Event = "halloween"
+		holidelay = 0
+	}
+	elseif month == 10
+	{
+		Curr_Event = "candysale"
+		holidelay = 0
+	}
+	//Thanksgiving/Harvest Festival
+	elseif month == 11
+	{
+		Curr_Event = "shroomseason"
+		holidelay = 0
+	}
+	elseif month == 12 && day == 10
+	{
+		Curr_Event = "blizzard"
+	}
+	elseif month == 12 && day == 21
+	{
+		Curr_Event = "wintersolstice"
+		holidelay = 0
+	}
+	elseif month == 12 && day < 24
+	{
+		Curr_Event = "christmasprep"
+		holidelay = 0
+	}
+	elseif month == 12 && day == 24
+	{
+		Curr_Event = "christmaseve"
+		holidelay = 0
+	}
+	elseif month == 12 && day == 25
+	{
+		Curr_Event = "christmas"
+		holidelay = 0
+	}
+	elseif month == 12 && day == 31
+	{
+		Curr_Event = "countdown"
+		holidelay = 0
+	}
+	//YES THAT'S IT.
+	//I could add more, but if I wanna put fishing tourneys, they'd be more on a weekend RNG thing, so this should be it for now.
+	
+	//Here's the RNG for him getting sick. Since it'd be a drag to have him sick on a holiday, this is separate.
+	//It's prioritized under the set holidays, but before normal events.
+	elseif RAND(100) < 15 && sicktally == 0 //setting up sickness as an event like AC - first time sick
+	{
+		Curr_Event = "sickbob"
+	}
+	elseif RAND(100) < 7 && curedtally > 0 //he can get sick afterwards, but much less frequently
+	{
+		Curr_Event = "sickbob"
+	}
+	//Bob's pretty chill, so he shouldn't really have that many non-holiday events...maybe just one or two...
+	/*Note that weekly occurrences can just be set in AITalk datetime stuff since they can be mentioned alongside
+	this stuff in game, like Joan, Katrina, etc.*/
+	elseif RAND(100) < 20 
+	{
+		Curr_Event = "bobwentshopping"
+	}
+	elseif RAND(100) > 80
+	{
+		Curr_Event = "katievisit"
+	}
+	elseif RAND(100) > 40 && raintally < 15 //rain weather event!
+	{
+		"raining"
+		raintally += 1
+	}
+	else
+	{
+		Curr_Event = EventList_Default[RAND(ARRAYSIZE(EventList_Default))]
+	}
+	Curr_Event //when making functions, BE SURE YOU INCLUDE THIS IF YOU WANT THE VARIABLE TO EXIST WHEN YOU CALL IT.
+	//saying 'Curr_Event' or 'string' or whatever at the end of the function returns it, if you're trying to make something equal to it
+	//however, if you're just printing text, you don't have to do anything like this. Keep that in mind if you want a return value, however.
+}
+
+EventList_Default : array
+{
+	"balloonpopping"
+	"hidenseek"
+	""
+	""
+	""
+	""
+	""
+	""
+}
+
+/*Unless I get more time and events, I don't think I'll have a specific custom array...but if you want to customize the default array to your tastes, here's how:
+Add events: Just copy my dialogue for the event you want. Every time you copy it, it adds an extra chance of it being drawn.
+Get rid of events: Put a '//' in front of it. This will remove it from being rolled, but it will still be there if you want to put it back in later.
+You can crash the array if you misspell something, so PLEASE copy the events you want more of if you do so.*/
+
+
+//uhhh I made this function but now I'll never use it oops
+OnItemPull
+{
+	string = ItemList[RAND(ARRAYSIZE(ItemList))]
+	string
+}
+
+ItemList : array
+{
+	if cookie >= 1
+	{
+		"That cookie you gave me earlier was...really good, actually.\e"
+	}
+	if cumulative_candies >= 1
+	{
+		"Hmmm...The entire time I've been here, you've only given me %(cumulative_candies) candies...I feel cheated.\e"
+	}
+	"this quote is in the ItemList section in spec_events, and it's about a potato.\e"
+}
+
+Delivery_Array : array 
+{
+	"special delivery test\e"
+}
+
+/* Item handling: just throw another if in the main menu thing, and have different On functions for each item?
+Sick items: separate
+
+normal items: variable for each item in onboot and MT Stats
+*/
+
+//DUDE maybe make a password input that unlocks bonus items or lore or something; like extra Cos HC stuff or something extra...
+//it'd be super easy to make a password; just make a menu option and an if statement that matches each password as a string
+
+
+
+/*EVENT DIALOGUE START*/
+//UGHHHH OH MY GOSH WHY ARE THERE SO MANY EVENTS FML
+
+
+Event_balloonpopping : array
+{
+	"Are you going balloon hunting today, %(username)? I got a %(furniture) earlier today from one!\e"
+}
+
+Event_hidenseek : array
+{
+	"hide and seek dialogue\e"
+}
+
+Event_katievisit : array
+{
+	"katie dialogue\e"
+}
+
+Event_bobwentshopping : array
+{
+	"shopping dialogue\e"
+}

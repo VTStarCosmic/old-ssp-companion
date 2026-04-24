@@ -1,0 +1,455 @@
+﻿/*Bootend.dic
+*/
+
+//FOR TESTING You CAN however paste it all into your Test Variable in menu.dic. Only paste your dialogue/choices, not the values.
+
+//First boot stuff
+OnFirstBoot
+{
+	/*For reference--if something isn't declared in OnFirstBoot, it will probably vanish after you close it, so declare everything here to be safe.
+	...unless you can figure out the #globaldefine in the default ghost's systemx .dic files or whatever they were called.
+	ACTUALLY THE GLOBALDEFINE MIGHT BE DANGEROUS; make sure it doesn't define things across all ghosts.
+	*/
+	//begin default
+ 	lastTalk = "" 
+	passmin = 0 
+	passsec = 0 
+ 	username         = "USER" 
+	stroke           = 0	
+ 	teachusername    = 0	
+	mikireflag       = 0	
+ 	aitalkinterval = 400 
+ 	birthdayprint = "????" 
+	talktime = "5 minutes" 
+	deleteshitai = "OFF"  
+	nowshell = "default_shell" //This is for a special if check in aitalk.dic to see what shell the ghost is using. You should use the name of your default shell folder here.
+	//end default
+	
+	//Cos variables begin
+	//Note: create cumulative time variables and put them in OnMinuteChange in AITalk
+	timeslot = GetTimeSlot
+	seasonslot = GetSeasonSlot
+	angstpoints = 0 
+	cookie = 0
+	mood = "" //to make my life easy, only moods other than happy will be included.
+	//prevmood = "Neutral"
+	sicktally = 0 //how many times you've helped him when sick
+	sickhelp = 0 //number of times you've helped him while sick, on the current event
+	boottally = 1
+	closetally = 0 //Hm, should I keep this just for error checking?
+	MTtrust = 0
+	ALLOFTHEMEMES = 0 //used in nameteach
+	Curr_Event = OnEventPull
+	cumulative_candies = 0
+	lollipops = 0
+	raintally = 0
+	foodtally = 0
+	deliveryflag = 0
+	nickname = "buddy"
+	catchphrase = "phthhhh"
+	zodiac = ""
+	photoget = 0
+	holidelay = 0
+	anniDay = day
+	anniMonth = month
+	candycount = 4
+	birthdaywish = ""
+	//end Cos variables
+	
+	if reference0 == 0 //if you've never installed the ghost before
+ 	{
+	    //Note to self--passivemode 
+		//notes - \x is wait for user input
+		// \c is to clear a balloon
+		//be sure to use big balloon for this
+		"\![enter,passivemode] . . . ?\x\c How would you like me to address you, %(catchphrase)?\x/
+		\w5\_q\![*]\q[He/Him/His,choicefirsthehim]\n/
+		\![*]\q[She/Her/Hers,choicefirstsheher]\n/
+		\![*]\q[They/Them/Their,choicefirsttheythem]\e"
+		
+		//Make sure to set up poses for both characters right when you start, otherwise one will be invisible until they speak.
+		}
+	else //if you've installed the ghost before. reference0 should theoretically be equal to the number of times you've installed them, or their number in the install roster...
+ 	{
+ 		"...? This place feels familiar...almost like I've been here before. I don't remember though. Ah well, %(catchphrase)!\x\cI don't suppose you need me to explain how things work here, so let's just get straight into it! My name's Bob, and I hope we can be good friends!\e"
+ 	}
+}
+
+Select.choicefirsthehim
+{
+	presuffix = "masculine"
+	himher = "him"
+	heshe = "he"
+	hisher = "his"
+	--
+	NameInput
+}
+
+Select.choicefirstsheher
+{
+	presuffix = "feminine"
+	himher = "her"
+	heshe = "she"
+	hisher = "her"
+	--
+	NameInput
+}
+
+Select.choicefirsttheythem
+{
+	himher = "them"
+	heshe = "they"
+	hisher = "theirs"
+	--
+	NameInput
+}
+
+NameInput
+{
+	"Well, now that I know that, how about you tell me your name, %(catchphrase)? \![leave,passivemode]\w8\0\s[0]\![open,inputbox,OnNameTeach,-1]\e"
+}
+
+//end of first boot stuff. The rest should be regular booting.
+
+OnBoot
+{
+	//nah, just have a tempvariable reset
+	lastTalk = "" 
+	passmin = 0
+	passsec = 0
+	timeslot = GetTimeSlot
+	seasonslot = GetSeasonSlot
+	MTTrust = 5 //replace this with a GetMTTrust function that checks stats
+	Curr_Event = OnEventPull
+	//Curr_Event = "summersolstice"
+	deliveryflag = 1
+	/*Okay, here's the deal. This is where I have a moment of programming indecisiveness. For my original setup, 
+	all the dates of holidays were entered in arrays and called from there in boots, AITalk, and closings. However,
+	AC doesn't exactly handle events that way, or at least, not the same as I'm doing. My original setup requires
+	that each event be on a specific day, meaning multiple days in a row would require one for each day. Plus, I 
+	never finished working on it outside of opening and closing. I'm going to have to redo boot and close dialogue 
+	so that they follow the same pattern as the event execution and AITalk calls.
+	if 
+	{
+		holidelay += 1
+	}*/
+	mood = "" //reset mood on booting
+	//mood = "Upset"
+	talkedto = 0 //how many times you've talked to them this session
+	
+	/*For Meta, being sick or having headaches happened independently of his events, and was decided here with RNG if-else statements. 
+	However, I removed that for Bob and put it in events because of how it works in game, plus I feel it's too many details at once for 
+	the average user. Unless you care about super-detailed realisticness AI, which I could account for, but add too many features at once 
+	and some are bound to be missed.*/
+	
+	
+ 	"\0\s[0]" //setting up poses. I should probably change this with events/random default poses.
+	--
+	//I'm prioritizing the birthdays here but I'm pretty sure I could just shove it in OnBootTalk. Test that once you're done.
+	if bornday == day && bornmonth == month && month == 1 && day == 1 //If both user and Bob's birthdays are the same
+	{
+		"It's our birthday today! Isn't that so cool? Happy birthday to us, ah huh huh HUH!\e"
+		Curr_Event = "doublebirthday"
+		holidelay = 0
+	}
+	elseif bornday == day && bornmonth == month //User's birthday
+	{
+		parallel boot_Birthday
+		Curr_Event = "userbirthday"
+		holidelay = 0
+	}
+	elseif day == 1 && month == 1 //Bob's birthday
+	{
+		"Hi, %(nickname)! Thanks for saying hi on my birthday!\e"
+		Curr_Event = "bobday"
+		holidelay = 0
+	}
+	elseif ISFUNC("boot_Event_%(Curr_Event)")
+	{
+		parallel EVAL("boot_Event_%(Curr_Event)")
+	}
+	elseif Curr_Event == "sickbob"
+	//okay so this needs some clarification. Basically up there, the Curr_Event is reset if the array exists.
+	//however, for these cases, theoretically he should keep the Curr_Event set to whatever it was originally.
+	//...now I just need to make sure Curr_Event is definitely set somewhere.
+	{
+		"...Oh, hi there. -sneezes- Sorry, I'm not feeling that great today, %(catchphrase)...\e"
+		holidelay += 1
+	}
+	/*elseif for all other conditions, like if you want him to spawn in rainy or snowy
+	{
+		
+	}*/
+	else
+	{
+		"%(OnBootTalk)" 
+		holidelay += 1
+	}
+}
+
+OnBootTalk
+{
+	//also don't forget to trigger events here as well from OnBoot
+	_arr = BootTalkArray
+	_string = _arr[RAND(ARRAYSIZE(_arr))]
+	"%(_string)"
+}
+
+OnClose
+{
+	timeslot = GetTimeSlot 
+	--
+	if bornday == day && bornmonth == month //birthday close
+	{
+		parallel close_Birthday
+	}
+	elseif Curr_Event == "sickbob"
+	{
+		if sickhelp >= 1
+		{
+			"Thanks for helping me out, %(nickname)...I'm starting to feel a little better already."
+			foodtally = 0
+			sicktally += 1
+		}
+		else 
+		{
+			"See you later, %(nickname)..."
+			//sick = 0
+			//add an extra variable in here called 'sickboots', where it only goes away after 3 boots. You're punished for it though
+		}
+	}
+	elseif ISFUNC("close_Event_%(Curr_Event)")
+	{
+		parallel EVAL("close_Event_%(Curr_Event)")
+	}
+	/*elseif headache == 1 //change this to other conditionals
+	{
+		"...Okay, see you later..."
+	}*/
+	elseif passmin >= 5 //regular close
+	{
+		"%(OnCloseTalk)"
+	}
+	else //short session
+	{
+		parallel shortSessionArray
+	}
+ 	--
+	"\w8\w8\-\e" 
+	/*the \- is what closes the ghost, which is how you can force-close them elsewhere. However there is actually a developer option that can disable this tag,
+	which makes me curious about how else you would close them...I believe the default ghost is coded differently as well, but I'm not for certain. This
+	works though, and if it does, that's all I need it to do, so I'll look at that later.*/
+}
+
+OnCloseTalk
+{
+	_arr = CloseTalkArray
+	_string = _arr[RAND(ARRAYSIZE(_arr))]
+	"%(_string)"
+}
+
+BootTalkArray : array
+{
+	_a = GETTIME
+	_m = _a[1] //month
+	_d = _a[2] //day
+	_season = GetSeasonSlot
+	_timeslot = GetTimeSlot
+	//Birthdays are prioritized in OnBoot, so no need to worry about them here.
+	
+	if ISFUNC("boot_%(_m)_%(_d)") //prioritize checking for holidays and other occasions
+	{
+		parallel EVAL("boot_%(_m)_%(_d)")
+	}
+	else
+	{
+		parallel bootArray_Nonspecific
+		parallel EVAL("bootArray_Month_%(_m)")
+		parallel EVAL("bootArray_DayOfWeek_%(weekday)")
+		parallel EVAL("bootArray_Seasonal_%(_season)")
+		parallel EVAL("bootArray_timeslot_%(_timeslot)")
+	}
+}
+
+CloseTalkArray : array
+{
+	_a = GETTIME
+	_m = _a[1] //month
+	_d = _a[2] //day
+	_season = GetSeasonSlot
+	_timeslot = GetTimeSlot
+	//Birthdays are prioritized in OnBoot, so no need to worry about them here.
+	
+	if ISFUNC("close_%(month)_%(day)") //prioritize checking for holidays
+	{
+		parallel EVAL("close_%(month)_%(day)")
+	}
+	else
+	{
+		parallel closeArray_Nonspecific
+		parallel EVAL("closeArray_Month_%(month)")
+		parallel EVAL("closeArray_DayOfWeek_%(weekday)")
+		parallel EVAL("closeArray_Seasonal_%(seasonslot)")
+		parallel EVAL("closeArray_timeslot_%(timeslot)")
+	}
+}
+
+OnWindowStateRestore
+{
+	"\0\s[0]!!!\w8\w8\c-drools--yawn-Oh, hi %(username)...I was just taking a nap...\w8\e"
+}
+
+OnGhostChanging
+{
+	if reference0 == "Bob" //for reloading. Use the name of the ghost defined in the .txt files
+	{
+		"Reload? That's not like resetting, is it?  Well, guess we'll find out, ahuhuhuh!\w8\e"
+	}
+ 	else //for switching out
+	{
+		"Oh, you're going now? See you later, %(nickname)! Have fun with %(reference0)!\w8\w8\e"
+	}
+}
+
+OnGhostChanged
+{
+	"\0\s[0]" //this sets up their default pose
+	--
+	if reference0 == "Bob" //name of the ghost in install.txt or descript.txt.
+	{
+		"Hey, I'm back! And the Resettis haven't shown up, so I think we're good, %(catchphrase)!\w8\e"
+	}
+	else //If you're switching to them from another ghost.
+	{
+		"Goodbye, %(reference0).\w8 See you later!\w8\e"
+    }
+}
+
+//Okay so unless I get super motivated in the future and wanna try something myself, multiple shells aren't happening. 
+//...well whaddya know; I got motivated
+/*OnShellChanging
+ {
+	if reference0 == "CQK_Meta_Knight_default"
+	{
+	"Hm? You want a change of art style? This one looks like the default one that CelticQuailKnight made with my developer, Cos...let's see.\e"
+	}
+	elseif reference0 == "TCP_Meta_Knight_default"
+	{
+	"Hm? You want a change of art style? \w8\w8\w8\w8This...\w8looks like something Cos, my developer, made...I thought she didn't want anyone to see her art. I guess things can change...let's see what she's done.\e"
+	}
+	else //canned response for anything I don't know about
+	{
+	"Hm? You want a change of art style? ...It doesn't look like this one's recognized in my code, or else you renamed it or something. You should tell Cos or Celtic so they can write some cool dialogue and spread the word about it. But anyway, let me see...\w8\e"
+	}
+ }
+
+//leaving this unchanged in case I forget these functions exist when/if I DO do that shell
+OnShellChanged
+{
+ 	if reference0 == "GT Default Shell" //Again, this is the name of your shell as you put in the descript.txt file for that shell.
+ 	{
+ 		nowshell = "default_shell" //This is the folder name for your shell.
+		
+ 		"\0\s[0]This dialogue is for switching to our default shell.\w8\1\s[18]No really, will anyone actually put in the work to use these functions?\w8\0\s[9]\n\n[half]Shh.\e"
+ 	}
+ 	else 
+ 	{
+	"\0\s[0]This dialogue is after we've changed our shell to %(reference[0]).\w8\1\s[18]How many shells you got?\e"
+	}
+}*/
+
+/*TIME FUNCTIONS (put down here because once you get them you never change them so out of my way you go)*/
+
+GetTimeSlot //You actually aren't confined to these names or timeslots; you can change them as long as they line up. I modified the lunch hour slightly myself.
+//may tamper with the rest of them later to suit my tastes...they're pretty good now to be honest though.
+{
+	if hour >= 5 && hour <= 8
+	{
+		"earlymorning"
+	}
+	elseif hour >= 9 && hour <= 11
+	{
+		"morning"
+	}
+	elseif hour >= 12 && hour <= 13
+	{
+		"lunch"
+	}
+	elseif hour >= 14 && hour <= 17
+	{
+		"afternoon"
+	}
+	elseif hour >= 18 && hour <= 20
+	{
+		"evening"
+	}
+	elseif hour >= 21 && hour <= 24
+	{
+		"latenight"
+	}
+	else
+	{
+		"midnight"
+	}
+}
+
+//I stole this function from the default ghost. However, I have changed some of the values/times to my tastes.
+GetSeasonSlot
+{
+	_a = GETTIME
+	_m = _a[1]
+	_d = _a[2]
+	
+	case GETTIME[1] {
+		when 1 {
+			'winter'
+		}
+		when 2 {
+			'winter'
+		}
+		when 3 {
+			if _d <= 8 
+			{
+				'winter'
+			}
+			else 
+			{
+				'spring'
+			}
+		}
+		when 4 {
+			'spring'
+		}
+		when 5 {
+			'spring'
+		}
+		when 6 {
+			'summer'
+		}
+		when 7 {
+			'summer'
+		}
+		when 8 {
+			'summer'
+		}
+		when 9 {
+			if _d <= 8 
+			{
+				'summer'
+			}
+			else 
+			{
+				'fall'
+			}
+		}
+		when 10 {
+			'fall'
+		}
+		when 11 {
+			'fall'
+		}
+		when 12 {
+			'winter'
+		}
+	}
+}

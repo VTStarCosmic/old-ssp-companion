@@ -1,0 +1,238 @@
+﻿/*AITalk: datetime
+This is another dialogue array directory. Specifically, it is for anything that is seasonal/timestamped/datestamped/etc. in AITalk, be it in random talk, or 
+saying something at a certain time of day. Hopefully the names of the arrays and/or my comments make things easy to tell what each array contains.
+
+THIS FILE IS MISSING DIALOGUE. TAKE CARE OF IT, FUTURE COS.
+
+Contents:
+-Months
+-Weekdays
+-Seasonal
+-timeslot value
+-OnMinuteChange time values
+*/
+
+/*--------------------------------------------------------------------------------------------*/
+/*Month-specific dialogue*/
+
+Month_Array_1 //January
+{
+	"Hi, %(username)! It's the beginning of the year, isn't it? Let's do our best!\e"
+	"My New Year's resolution is to eat vanilla pudding and creme brulee until I drop.\e" 
+}
+
+Month_Array_2
+{
+	"Valentine's Day is in February, right? That means there's lots of chocolate around! :D\e"
+}
+
+Month_Array_3
+{
+	"It's so windy out, %(nickname). Make sure you hold onto your gear when you go out, %(catchphrase)!\e"
+}
+
+Month_Array_4
+{
+	"It's getting rainy, isn't it, %(nickname)?\e"
+}
+
+Month_Array_5
+{
+	"I'm so glad it's starting to finally warm up, huh, %(username)?\e"
+}
+
+Month_Array_6
+{
+	"It's pretty rainy out, isn't it, %(nickname)? Make sure you take your umbrella with you, %(catchphrase)!\e"
+}
+
+Month_Array_7
+{
+	"Do you have fireworks during the summer? In %(townname), we have fireworks in the summer sometimes! You should come see them!\e"
+	
+	if timeslot == "evening" || timeslot == "latenight" //maybe move this to seasonal?
+	{
+		"It's nice out in the evening when it's cool! You can even catch some giant beetles sometimes! -claps-\e"
+	}
+}
+
+Month_Array_8
+{
+	"It's so hot out, isn't it, %(username)? -sweats-\e"	
+}
+
+Month_Array_9
+{
+	"It's September, isn't it? Do you think we'll see some crickets out, %(username)?\e"
+}
+
+Month_Array_10
+{
+	"I can't wait to jump in some leaf piles...How about you, %(nickname)?\e"
+}
+
+Month_Array_11
+{
+	"It's November, right? Aw man! I can't wait for it to be December so I can eat all of those yummy Christmas cookies, %(catchphrase)!\e"
+}
+
+Month_Array_12
+{
+			/*if day == 25
+		{
+			//find the right variable for the day
+			"Merry Christmas!\e"
+		}*/
+		//I'm pretty sure I can just do that with an array too.
+		"Ooo it's Toy Day, %(username)! What? You mean it's not Toy Day yet? Aw man! I was getting so excited, %(catchphrase)...\e"
+}
+
+/*--------------------------------------------------------------------------------------------*/
+/*Weekdays dialogue*/
+
+DayOfWeek_Array_1 //Monday
+{
+	"Hm, it's Monday...I wonder if the pretzel place is open, %(catchphrase)?\e"
+}
+
+DayOfWeek_Array_2
+{
+	"Tuesday dialogue.\e"
+}
+
+DayOfWeek_Array_3
+{
+	"It's Wednesday today...I'm pretty sure I saw Katrina around. She told me my fortune was %(fortune). What do you think of that, %(nickname)?\e"
+	if ALLOFTHEMEMES == 1
+	{
+		"It is Wednesday, my dudes.\e"
+	}
+}
+
+DayOfWeek_Array_4
+{
+	"Hmmmm...Wonder if that ice cream parlor still has their Thursday specials...I'm hungry now, %(catchphrase)!\e"
+}
+
+DayOfWeek_Array_5
+{
+	"It's Friday, isn't it, %(nickname)? That means ___ is visiting soon!\e"
+}
+
+DayOfWeek_Array_6
+{
+	"It's Saturday, %(catchphrase)! That means K.K. Slider is coming to visit tonight! You should go and listen to his music for sure!\e"
+}
+
+DayOfWeek_Array_7
+{
+	"The weekend is almost over, %(nickname)! Did you get all your weekend snacks in?\e"
+}
+
+/*--------------------------------------------------------------------------------------------*/
+/*Seasonal dialogue*/
+//the function in bootend has been changed to reflect these values, but idk about the AITalk generator or anywhere else. Make sure you check EVERYTHING.
+
+Seasonal_Array_spring : array
+{
+	"Are the cherry blossoms out on your trees, %(nickname)? I hope so! They look really pretty ^-^\e"
+}
+
+Seasonal_Array_summer : array
+{
+	"It's pretty hot out, isn't it, %(username)? The sun's pretty nice out, but even I get hot after a while...Make sure you stay cool, %(catchphrase)!\e"
+	//bonus variation of this where he warns you to be careful about getting sunburnt 'cause you're a human, after trust level
+	"I get super duper excited when summertime rolls around! I have so much fun thinking about all the fun possibilities.  What do you think I should do first? \w8\w8 .\w8.\w8.\w8 What? Go to the beach? Can you read minds? My bug friends want a summer vacation home, so I said I’d make one at the beach! They’re never gonna expect a castle! With a moat too! Gotta have the best defenses in case of aliens…I can’t wait to show it to you when I’m all done, %(catchphrase). You’ll love it, %(username)!\e"
+}
+
+Seasonal_Array_fall : array
+{
+	"Don't you just love the fall? There's piles of leaves to jump in...and squash soup...and apple strudel...and apple pie...and pumpkin pie...and pecan pie...........and snickerdoodles...\e"
+}
+
+Seasonal_Array_winter : array
+{
+	"%(username), do you like ice skating? Me? I've never gone ice skating before. The water around here never freezes. But I wanna visit another town someday and go skating! Ahuhuhuh!\e"
+}
+
+/*--------------------------------------------------------------------------------------------*/
+/*Timeslot dialogue*/	
+
+
+timeslot_Array_earlymorning //5-9AM
+{
+	"-yawn- %(username)...? What are you doing up right now...It's a little early still.\e"
+}
+
+timeslot_Array_morning : array //9-12AM
+{
+	"Have you eaten breakfast yet, %(username)? You don't want to start your day without the proper food!\e"
+}
+
+timeslot_Array_lunch : array //12-3PM
+{
+	"It's almost lunchtime, %(nickname)! Got any snacks?\e"
+}
+timeslot_Array_afternoon //3-6PM
+{
+	"Hi, %(username)! Did you have your 3 o'clock snack yet? Remember, it's the most important snack of the day.\e"
+	
+}
+timeslot_Array_evening //6-9PM
+{
+	"Huh huh huh...Say good-bye to Mr. Sun, %(catchphrase).\e"
+}
+timeslot_Array_latenight //9PM-12AM
+{
+	"-yawn- What? Oh, hi %(username)! It's getting late!\e"
+	"Okay, tell me, %(username): What’s your pre-sleepy-time routine? I like looking at my favorite picture book.\e"
+}
+timeslot_Array_midnight //12AM-5AM
+{
+	"You're up so late, %(username)! You must be so mature! -poses-\e"
+}
+
+/*ATTENTION! The arrays below are NOT RANDOMLY GENERATED! They are timestamped and called in the OnMinuteChange function in AITalk, and only appear if you have the ghost open 
+during a certain time, with 'AITalk randomly' enabled. You can add any you want as long as they are formatted correctly, and I've modded the function to read them in.
+FORMATTING IS timeArray_Hour_Minute OR wtimeArray_Weekday_Hour_Minute! These should be generic events; anything requiring season or month or anything should be embedded with if's.
+*/
+
+//Arrays for daily events
+
+timeArray_0_0 : array
+{
+	"It's midnight, %(nickname)! It's so late!\e"
+}
+
+timeArray_12_0 : array
+{
+	if ALLOFTHEMEMES == 1
+	{
+		"IT'S HIGH NOON. ...You get what I'm referencing, right, %(catchphrase)?\e"
+	}
+	"Mmmm, it's 12PM! That means it's officially time for my lunchtime snack :D\e"
+}
+
+timeArray_16_20 : array
+{
+	if ALLOFTHEMEMES == 1
+	{
+		"IT'S 4:20PM; YEAH!\e"
+	}
+	else
+	{
+		"...-sunglasses-...\e"
+	}
+}
+
+timeArray_23_55 : array
+{
+	"It's almost midnight...Are you going to bed soon, %(catchphrase)?\e"
+}
+
+//Arrays for events that require a specific weekday. For some reason the weekday variable in AITalk is 0-6 instead of 1-7 like the others...weird.
+
+wtimeArray_0_19_30 : array //Sunday, 19:30 7:30PM
+{
+	"It's 7:30 on Sunday. Back home, I used to sit down and watch a movie or read books with my family. Oooo, and eat some of my mom's homemade cookies, too!\e"
+}

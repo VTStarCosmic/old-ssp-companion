@@ -1,0 +1,142 @@
+﻿/*Conditional dialogue for Bob. Mood can be randomly generated on booting by RNG in bootend.dic, but I don't know if
+I'll use it for Bob. I'd rather have his mood be changed by different variables than just RNG; it'll make things simpler,
+and also more similar to the actual Animal Crossing games.
+
+Variables to work with:
+	cookie = 0
+	mood = "Neutral"
+	prevmood = "Neutral" (probably will not be used)
+	sicktally = 0
+
+This .dic file will only consist of random dialogue; there should be no hardcoding in it.
+
+CONTENTS:
+-Mood
+-MTTrust
+-Photo
+-Sick
+
+*/
+
+Mood_Array_Upset : array
+{
+	"I don't really feel like talking, %(catchphrase)...\e"
+}
+
+MTTrust_Array_2 : array
+{
+	"How are you doing today, %(username)? Me? I'm a little hungry, %(catchphrase).\e"
+}
+
+MTTrust_Array_3 : array
+{
+	"I'm pretty forgetful, but I'll record the good times we've shared in the notebook of my heart.\e" 
+}
+
+MTTrust_Array_4 : array
+{
+	"Heya!  You have that look on your face like something’s up...Do you wanna talk about it? ...will we be friends forever? Of course we’ll be friends forever! There’s still tons of stuff we need to do together. Like making a cake topped with lots of candy and eating the ENTIRE thing, just the two of us! Or catching some super-cool insects to add to the collection! Let’s keep doing all the fun things.\e"
+}
+
+MTTrust_Array_5 : array //this is where he can randomly give you a photo
+{
+	"trust 5 dialogue\e"
+	if photoget != 1
+	{
+		"photo dialogue\e"
+		photoget = 1
+	}
+	if photoget == 1
+	{
+		parallel Photo_Array
+	}
+}
+
+MTTrust_Array_6 : array //super frens
+{
+	"I trust you more than anyone else, %(username). Let's be friends for-EVER!\e"
+}
+
+Photo_Array : array
+{
+	"Hey, %(nickname), did you frame that picture of me? Uh huh huh HUH! Man, I feel like a celebrity! Do you want my autograph, too!?\e" 
+}
+
+Item_Array : array 
+{
+	if puzzleFlag == 1
+	{
+		"(Puzzle flag has been activated.)\e"
+	}
+	if cumulative_candies >= 1
+	{
+		_s = OnCandyHandlerDialogue
+		"%(_s)"
+	}
+}
+
+OnCandyHandlerDialogue
+{
+	//there's probably a simpler way to do this with rounding, but it would also involve a bunch of if's, so this is it for now.
+	if cumulative_candies > 1000 //what should be the max number of candies...hmmmm...
+	{
+		string = TooMuchCandy[RAND(ARRAYSIZE(TooMuchCandy))]
+	}
+	if cumulative_candies > 100
+	{
+		string = Candy_100[RAND(ARRAYSIZE(Candy_100))]
+	}
+	if cumulative_candies > 5
+	{
+		string = Candy_5[RAND(ARRAYSIZE(Candy_5))]
+	}
+	string
+}
+
+Candy_5 : array
+{
+	"That candy you gave me before was really good, %(nickname)! So...you got any more? -sneaky-\e"
+}
+
+Candy_100 : array
+{
+	"If I haven't said it before, thanks for sharing your candy with me. It's really nice to have an amazing friend like you, %(catchphrase)!\e"
+}
+
+TooMuchCandy : array
+{
+	"Ohhh, %(nickname)...I think I ate too much candy...\e"
+}
+
+GiveCandy : array
+{
+	//array for the bunches of dialogue about giving him some candy; maybe have some ifs...but nah; he eats too much to care over smaller numbers XD
+	"A candy? Thanks, %(username)! You're a great friend!\e"
+	"Candy? You know I'll always accept, %(catchphrase)!\e"
+}
+
+/*NOTE FOR THE SICK ARRAY: DON'T write any change of sprites here! That way, when you give Bob the items, they should theoretically never vanish.*/
+
+SickTalk : array
+{
+	"test sick dialogue\e"
+	"test sick dialogue 2\e"
+}
+
+birthdayDialogue : array
+{
+	if birthdaywish != ""
+	{
+		"dialogue for no wish yet\e"
+	}
+	else
+	{
+		"dialogue for %(birthdaywish)\e"
+	}
+}
+
+
+holidelayDialogue : array //when there haven't been any holidays in a while
+{
+	"There haven't been any events or holidays in a while, huh, %(nickname)? I'm getting a little bored! I might have to make a National %(appreciationdaytitles) Appreciation Day! Ah huh huh HUH!\e"
+}

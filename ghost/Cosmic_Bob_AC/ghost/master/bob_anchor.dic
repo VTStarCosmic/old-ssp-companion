@@ -1,0 +1,49 @@
+/*anchor.dic
+.dic file dealing with clickable links in conversations. For my purposes, I'll probably use this to include info on bolded text, like
+Kirby pause screens, or at least to hand out some extra information. Since I have no secondary character with Meta as of now, I can
+just use the secondary character to give definitions...hopefully without interrupting his dialogue.
+*/
+
+//Since all dialogue goes through OnTranslate before running, can you use REPLACE() to replace regular text?
+//or is there another place to might do it? Maybe when loading dialogue in from arrays since reference0 is the selection here?
+//maybe find a way to replace . with .\w8?
+
+OnTranslate
+{
+	//load in all the anchors up here, and then tell what to do with them down there
+	_talk = reference0
+ 	_talk = REPLACE(_talk, "Popstar", "\_a[anchor1]Popstar\_a")
+ 	_talk = REPLACE(_talk, "Orange Ocean", "\_a[anchor2]Orange Ocean\_a")
+ 	_talk = REPLACE(_talk, "Polygon City", "\_a[anchor3]Polygon City\_a")
+	{
+	"%(_talk)"
+	}
+}
+	
+OnAnchorSelect
+{
+	if "http://" _in_ reference0 //for web addresses
+	{
+	"\j[%(reference0)]\e" // \j is a tag that will open a specified url in the user's browser of choice. 
+	}
+	else 
+	{
+	case reference0 
+	{
+		//you don't have to name them anchor1-2-3-etc. but for the sake of my laziness I did, shamelessly. RIP potential organization.
+			when "anchor1" 
+			{
+				"\1\s[10]Popstar: A world of miracles, in many legends, this star-shaped planet is the brightest star in the universe. It is often attacked because of that.\e"
+				//have an extra line in here if trust is high enough containing HC stuff
+			}
+			when "anchor2" 
+			{
+				"\1\s[10]Orange Ocean: One of Dream Land's ocean fronts, the section dubbed 'Orange Ocean', particularly 'Secret Sea', is secluded from tourist traffic and is barely traveled. Perfect for those who hate socializing, are hiding something, or both.\e"
+			}
+			when "anchor3" 
+			{
+				"\1\s[10]Polygon City: One of the most technologically advanced cities on Popstar.\e"
+			}
+		}
+	}
+}

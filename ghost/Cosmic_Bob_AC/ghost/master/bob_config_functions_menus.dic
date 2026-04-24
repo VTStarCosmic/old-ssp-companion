@@ -1,0 +1,415 @@
+﻿/*config_functions.dic
+Putting all the configuration menu stuff in here just so I can keep the menu.dic as strictly focused to each ghost's personal menus as possible.*/
+
+//This function's for all of the stuff like changing username/birthday/talkrate/etc.
+OnTalkConfig
+{
+	"\0\b2\_q" 
+	--
+	"User Data:\n\n"
+	--
+	"Your name: %(username) (\q[Edit,TEACHNAME])\n"
+	--
+	"Your pronouns: %(heshe)/%(himher)/%(hisher) (\q[Edit,TEACHPRONOUN])\n"
+	--
+	"Your birthday: %(birthdayprint) (\q[Edit,TEACHBDAY])\n\n"
+	--
+	"Talk Rate: Once randomly every %(talktime) (\q[Edit,talkinter])\n\n"
+	--		
+	{
+		"\![*]Enable Uninstall? (Currently: %(deleteshitai))\n\q[ON,deleteon] \q[OFF,deleteoff]\n\n[half]\n"
+	}
+	--
+	"\![*]\q[Cancel,BACKTOMENU]\e"
+}
+
+//The below four functions manage the pronouns to call the user. I tried making an extra option for 'penguin', but for some reason it wasn't a fan.
+Select.TEACHPRONOUN
+{
+	"\0\s[0]How would you like me to refer to you?\w4\n\n\_q/
+		\![*]\q[He-His-Him,choicemasc]\n/
+		\![*]\q[She-Her-Her,choicefem]\n/	
+		\![*]\q[They-Their-Them,choiceneither]\e"
+}
+
+Select.choicemasc
+{
+	presuffix = "masculine"
+	himher = "him"
+	heshe = "he"
+	hisher = "his"
+	--
+	"Okay, ''he/him''...noted.\e"
+}
+
+Select.choicefem
+{
+	presuffix = "feminine"
+	himher = "her"
+	heshe = "she"
+	hisher = "her"
+	--
+	"Okay, ''she/her''...noted.\e"
+}
+
+Select.choiceneither
+{
+	presuffix = "undefine"
+	himher = "them"
+	heshe = "they"
+	hisher = "their"
+	--
+	"Okay, ''they/them''...noted.\e"
+}
+
+
+//don't touch
+
+Select.deleteon
+{
+	deleteshitai = "ON"
+	TalkConfig
+}
+
+Select.deleteoff
+{
+	deleteshitai = "OFF"
+	TalkConfig
+}
+
+
+/*This next set of functions handles inputting the user's birthday. To be honest, I'm not a fan of putting the month and date together in the string,
+but that's personal preference and I've modded the rest of the code so that it's only isolated here, so no loss to me and I don't have to rewrite all this
+stuff. I am really not interested in rewriting all that.*/
+
+Select.TEACHBDAY
+{
+	dayslot = GetDaySlot 
+	"You want to tell me your birthday? Well first, what month were you born? \w8I need the number format of the month, if it wouldn't pain you.\![open,inputbox,OnUserBornMonth,-1]\e"
+}
+
+GetDaySlot
+{
+	"%(month)month %(day)day"
+}
+
+OnUserBornMonth
+{
+	_tempmonth = reference0 
+	if _tempmonth >= 1 && _tempmonth <= 12 
+	{
+		bornmonth = _tempmonth
+		bornmonthprint = Printmonth
+			
+		"Hmmm, so you were born in %(bornmonthprint), as it's called in your world.\n\w8So, what day of that month is it?\![open,inputbox,OnUserBornDay,-1]\e"
+	}
+	else 
+	{
+		"Bad input already? Would it pain you to be a little more careful? Just even slightly? ...Well, maybe it was just a typo. Here, try again. I need a number between 1 and 12; it is not TOO difficult.\![open,inputbox,OnUserBornMonth,-1]\e"
+	}
+}
+
+Printmonth
+{
+	if bornmonth == 1
+	{
+		"January"
+	}
+	elseif bornmonth == 2
+	{
+		"February"
+	}
+	elseif bornmonth == 3
+	{
+		"March"
+	}
+	elseif bornmonth == 4
+	{
+		"April"
+	}
+	elseif bornmonth == 5
+	{
+		"May"
+	}
+	elseif bornmonth == 6
+	{
+		"June"
+	}
+	elseif bornmonth == 7
+	{
+		"July"
+	}
+	elseif bornmonth == 8
+	{
+		"August"
+	}
+	elseif bornmonth == 9
+	{
+		"September"
+	}
+	elseif bornmonth == 10
+	{
+		"October"
+	}
+	elseif bornmonth == 11
+	{
+		"November"
+	}
+	else
+	{
+		"December"
+	}
+}
+
+Printday
+{
+	if bornday == 1 || bornday == 21 || bornday == 31
+	{
+	"%(bornday)st"
+	}
+	elseif bornday == 2 || bornday == 22
+	{
+	"%(bornday)nd"
+	}
+	elseif bornday == 3 || bornday == 23
+	{
+	"%(bornday)rd"
+	}
+	else
+	{
+	"%(bornday)th"
+	}
+}	
+
+OnUserBornDay
+{
+	tempday = reference0 
+	
+	if bornmonth == 1 || bornmonth == 3 || bornmonth == 5 || bornmonth == 7 || bornmonth == 8 || bornmonth == 10 || bornmonth == 12 
+	{
+		if tempday >= 1 && tempday <= 31 
+		{
+			bornday = tempday
+			borndayprint = Printday
+			userbirthday = "%(bornmonth)month %(bornday)day"
+			birthdayprint = "%(bornmonthprint) %(borndayprint)"
+			
+			"%(birthchecked)"
+		}
+		else 
+		{
+			"Uh...%(username)? I don't think that's a real day. You wanna try again?\![open,inputbox,OnUserBornDay,-1]\e"
+		}
+	}
+	elseif bornmonth == 2 
+	{
+		if tempday >= 1 && tempday <= 29 
+		{
+			bornday = tempday
+			borndayprint = Printday
+			userbirthday = "%(bornmonth)month %(bornday)day"
+			birthdayprint = "%(bornmonthprint) %(borndayprint)"
+				
+			"%(birthchecked)"
+		}
+		else
+		{
+			"Uh...%(username)? I don't think that's a real day. You wanna try again?\![open,inputbox,OnUserBornDay,-1]\e"
+		}
+	}
+	else 
+	{
+		if tempday >= 1 && tempday <= 30 
+			{
+				bornday = tempday
+				borndayprint = Printday
+				userbirthday = "%(bornmonth)month %(bornday)day"
+				birthdayprint = "%(bornmonthprint) %(borndayprint)"
+				
+				"%(birthchecked)"
+			}
+		else
+		{
+			"Uh...%(username)? I don't think that's a real day. You wanna try again?\![open,inputbox,OnUserBornDay,-1]\e"
+		}
+	}		
+}
+
+birthchecked
+{
+	//zodiac pull here?
+	zodiac = OnZodiacPull
+	if userbirthday == dayslot //if today is the user's birthday
+	{
+		"\0\s[0]It's your birthday today...?\w8\w8 Well then, happy birthday, %(username). Hope it's a good one.\e"
+	}
+	elseif userbirthday == "12month 25day"
+	{
+		"You were born on Christmas, %(username)? How special...I'll remember that.\e"
+	}
+	elseif userbirthday == "2month 14day"
+	{
+		"So you were born on Valentine's Day, %(catchphrase)? Ah huh huh HUH! Maybe you're meant to find true love or something on your birthday? I'm just teasing!\e"
+	}
+	else 
+    {
+		"So your birthday is %(bornmonthprint) %(borndayprint). I'll remember it, %(catchphrase)! Or at least, I'll try to, ah huh huh. By the way, your sign would be %(zodiac), wouldn't it? I think it fits you! I'll keep that in mind when buying you a present. -sneaky-\e"
+	}
+}
+
+/*END BIRTHDAY STUFF; BEGIN OTHER SETTINGS STUFF*/
+
+Select.talkinter
+{
+	"\0\s[0]\b2How often should we speak?\w8\1\s[10]The interval is currently set to %(talktime)./
+	\0\n\n[half]/
+	\![*]\q[Every 30 seconds,TALKMAX]\n/
+	\![*]\q[Every minute,TALKHIGH]\n/
+ 	\![*]\q[Every 3 minutes,TALKNORMAL]\n/
+	\![*]\q[Every 5 minutes,TALKPOOR]\n/
+ 	\![*]\q[Don't talk randomly,TALKNONE]\n\n[half]/
+	\![*]\q[Don't change,TalksTill]\e"
+}
+
+//If the user doesn't want to change the rate. 
+Select.TalksTill
+{
+	"\0\s[0]No change to the talk rate.\e"
+}
+
+//If the user chooses every 30 seconds.
+Select.TALKMAX
+{
+	talktime = "30 seconds" 
+	aitalkinterval = 45 
+		
+	"\0\s[0]I'll say something every 30 seconds! ^-^\e"
+}
+
+//If the user chooses every minute.
+Select.TALKHIGH
+{
+	talktime = "minute"
+	aitalkinterval = 90
+		
+	"\0\s[0]I'll say something every minute!\e"
+}
+
+//If the user chooses every three minutes.
+Select.TALKNORMAL
+{
+	talktime = "3 minutes"
+	aitalkinterval = 270
+	
+	"\0\s[0]I'll say something every three minutes!\e"
+}
+
+//If the user chooses every five minutes. This is the default rate the ghost will start up in, as seen in bootend.dic.
+Select.TALKPOOR
+{
+	talktime = "5 minutes"
+	aitalkinterval = 400
+	
+	"\0\s[0]I'll say something every five minutes!\e"
+}
+
+//If the user chooses to not have them speak. 
+Select.TALKNONE
+{
+	talktime = "Don't talk randomly."
+	aitalkinterval = 0
+
+	"\0\s[0]Oh, you don't want me to distract you? I'll try not to, %(nickname)! Just let me know if I drool anywhere, ah huh HUH!\e"
+}
+
+	
+//This is when the user chooses to change their name. It's linked to the functions outlined in nameteach.dic. Nothing to touch here.
+Select.TEACHNAME
+{
+	OnTeachName	
+}
+
+	
+//When the user hits Cancel in a menu.
+Select.CANCEL
+{
+	"...\e"
+}
+
+	
+//When the Functions option is selected.
+Select.dosomething
+{
+	//add multiple dialogue intros here?
+ 	"\0\s[0]\b2Functions Menu:\n\n"
+	--
+ 	"\![*]\q[Open Calendar,CALENDAR]\n/
+	\![*]\q[Check Email,MailCheck]\n/
+	\![*]\q[Open SSP Preferences,sspconfig]\n/
+	\![*]\q[Empty Recycle Bin,ChoiceGarbagecan]\n/
+	\![*]\q[System Information,ChoiceSystemInformation]\n\n/
+ 	\![*]\q[Back to main menu,BACKTOMENU]\e"
+}
+
+//When the user clicks Open Calender. This will open the calender function of SSP.
+Select.CALENDAR
+{
+	"\0\s[0]Aren't you a smart one, planning stuff out! Ah huh huh! Motivated, huh? Well, here you go.\![open,calendar]\e"
+}
+
+//When the user chooses SSP preferences. This will open the same window that shows up if you right click your ghost and go to Utilities - Preferences.
+Select.sspconfig
+{
+	"\0\s[0]You want me to tell you how to set the SSP preferences? Sure, take a look here.\![open,configurationdialog]\e"
+}
+
+//If the user chooses to empty the recycle bin.
+Select.ChoiceGarbagecan
+{
+	_gomicheck = FUNCTIONEX("gomi.dll", "-n")
+	
+	if _gomicheck == 0 //If the recycle bin is empty.
+	{
+		"What? \w8Empty the recycling bin?\w8 But...it's empty.\e"
+	}
+	elseif _gomicheck >= 1 //If the recycle bin is full.
+	{
+		"Empty the recycle bin? Sure! I love hearing the sound effect, %(catchphrase)...just let me...\w8\w8\w8\w8\w8\![raise,OnGarbagecanEmpty]\w9\w9\w9\cI love the sound of that! It's all done, %(catchphrase)!\e"
+		"Empty the recycle bin? Sure! Just give me a second to finish my snack...\w8\w8\w8\w8\w8\![raise,OnGarbagecanEmpty]\w9\w9\w9\cAll done, %(nickname)!\e"
+	}
+}
+
+//This is for the SAORI, don't touch it.
+OnGarbagecanEmpty
+{
+	_gomi = FUNCTIONEX("gomi.dll", "-f")
+}
+
+//This is when the user chooses System Information. Don't touch any of this either...unless you're a penguin who wants to make Meta nitpick/tease about your computer...
+Select.ChoiceSystemInformation
+{
+	os_name = FUNCTIONEX("saori_cpuid.dll","os.name")
+	os_version = FUNCTIONEX("saori_cpuid.dll","os.version")
+	cpu_name = FUNCTIONEX("saori_cpuid.dll","cpu.name")
+	cpu_clockex = FUNCTIONEX("saori_cpuid.dll","cpu.clockex")
+	"/
+	\0\s[0]\b[2]/
+	\_q\f[bold,1]OS:\f[bold,0] %(os_name) %(os_version)\n/
+	\f[bold,1]Memory Load:\f[bold,0] %(memoryload)%\n/
+	\f[bold,1]Physical Memory:\f[bold,0] %(memoryavailphys) KB\n/
+	\f[bold,1]CPU:\f[bold,0] %(cpu_name) %(cpu_clockex)MHz\n/
+	\f[bold,1]Ukagaka:\f[bold,0] %property[baseware.version]/
+	\e"
+}
+	
+//This is when the user chooses to check their email. The rest of this function plays out in etc.dic. You can leave this alone.
+Select.MailCheck
+{
+	"\![biff]\e"
+}
+
+//This is when the user ends their headline session. Headlines are detailed more in etc.dic. 
+Select.HEADLINECANCEL
+{
+		"\0\s[0]Finished with headlines.\e"
+}

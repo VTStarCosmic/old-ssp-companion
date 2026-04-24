@@ -1,0 +1,121 @@
+﻿/*nameteach.dic
+Anything to do with username changing functions.
+*/
+
+OnTeachName	
+{
+	if reference0 == "TEACHNAME" 
+	{
+		"Wait, am I saying your name wrong? Hahaha, sorry! I get distracted sometimes, %(catchphrase). Tell me how to say your name then:\![open,inputbox,OnNameTeach,-1]\e"
+	}
+	else
+	{
+		"An error has occurred in OnTeachName.\e"
+		/*programming strats at work here. This would produce this specific error message to let you know that somehow, somebody tried to activate this section of code without
+		doing it from the main menu. Obviously you would never see this unless something went wrong, so it's better than having the ghost say nothing and not knowing why it
+		crashed. I haven't seen it yet, so that must mean everything's good...hopefully.*/
+	}
+}
+
+OnNameTeach
+{
+	/*I have to give  HUGE SHOUTOUT to zarla for thinking of an easier way to check names (since I have apparently forgotten my user input debugging skills; sorry Professor
+	Studtmann...I tried.) There is actually a limit on how many arguments you can put in if-else statements, plus checking for case-sensitive stuff and punctuation is just annoying.
+	I am serious; words...cannot express how much easier my life is because of this trick. If you're reading this zarla, thank you SO much.*/
+	tempname = reference0 //check name
+	confirmname = reference0 //actual name
+	tempname = TOLOWER(tempname) //changes it to lowercase
+	tempname = REPLACE(tempname," ","") //removes spaces
+	tempname = REPLACE(tempname,".","") //removes periods
+	tempname = REPLACE(tempname,"-","") //removes dashes
+	tempname = REPLACE(tempname,"_","") //removes underscores
+	
+	//Convenient tag: \![open,inputbox,OnNameTeach,-1]
+	
+	if tempname == "bob" 
+	{
+		"What? But that's MY name! H-Hey, at least try to make it something different!\![open,inputbox,OnNameTeach,-1]"
+	}
+	elseif tempname == "" 
+	{
+		username = "buddy" 
+		"...Uh, I don't think you put anything in, %(username). But I'm fine with calling you %(username), %(username)!\e"
+	}
+	elseif STRLEN(tempname) > 40 //40 character limit to prevent people from typing in sentences or long stuff that might screw up the dialogue boxes
+	/*After reviewing zarla's Gaster ghost, I found in her comments that there IS apparently a character limit of 30,000 characters discovered by a user named Day.
+	It didn't say what this did to the dialogue boxes though, so for the sake of good programming practice, I don't think I want to find out right now.
+	Note that it's still entirely possible to change your name in another ghost though, so this is Bob's opinion only haha.*/
+	{
+		"...Uh. That's a bit long, you know...Could you try something shorter? It's not that it's a bad name! I just don't think I'll remember it, haha!\![open,inputbox,OnNameTeach,-1]\e"
+	}
+	
+	//have one for Cos too with a rage penguin
+	
+	else //if the name is usable
+	{
+		/*Okay so here is my guilty meme name gag. Theoretically you could do this for all of those above conditionals, but it'd take more time and to be honest, I 
+		don't think I'd need one unless for some off reason I decide to include someone with a billion nicknames. If you were doing intense programming though, 
+		I suppose you could replicate it that way.*/
+		
+		_memename = 0 //assuming you don't have a meme name
+		for _i = 0; _i < ARRAYSIZE(Meme_Names); _i++
+		{
+		if tempname == Meme_Names[_i] //if your name is in the meme name array, trigger the response
+		{
+			username = confirmname
+			"Ooooo, so you like a good meme, huh, ''%(username)?'' Well I very much approve! I can already tell we'll be great friends!\e"
+			_i = ARRAYSIZE(Meme_Names)
+			_memename = 1
+			ALLOFTHEMEMES = 1
+		}
+		}
+		
+		if _memename == 0 //otherwise if it's not, use the regular name dialogue
+		{
+		username = confirmname
+		"So, %(username), is it?  I'll try to remember!\e"
+		//you can set up titles/prefixes/suffixes here, but I don't think Meta particularly cares enough to do so.
+		}
+	}
+}
+
+//oh gosh, should I do an entire list of every AC character to have him reference too? That would be a trip...
+
+Meme_Names : array
+{
+	"soos"
+	"kingweedweedweed"
+	"splattim"
+	"splattimdoesit"
+	"splattimhedoesit"
+	"splattimdoesitagain"
+	"boomy"
+	"woomy"
+	"ngyes"
+	"numberone"
+	"number1"
+	"#1"
+	"wearenumberone"
+	"bob"
+	"robbierotten"
+	"tomnook"
+	"bobross"
+	"despacito"
+	"thebeemovie"
+	"thomasthetankengine"
+	"dakween"
+	"mybrudda"
+	"ugandanknuckles"
+	"dawae"
+	"daway"
+	"doyouknodewae"
+	"doyouknodawae"
+	"somebodyoncetoldme"
+	"butmyhopewillneverdie"
+	"wombocombo"
+	"spongebob"
+	"sanic"
+	"gottagofest"
+	"bib"
+	//the entire script of the bee movie
+}

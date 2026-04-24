@@ -1,0 +1,82 @@
+﻿/*Nonconditional AITalk
+
+Okay so after VERY EXTENSIVE TESTING AND PAIN, I discovered that if, at ANY point in time, you only have one array in an entire file, you NEED to declare it as 
+nonoverlap OR YOU WILL HAVE PAIN AND FRUSTRATION. Without the nonoverlap definition, the array will do exactly as it implies with other arrays and even its own 
+contents, and everything will be devoured for some reason and the character will not say anything, or if they DO, it will be fragments of dialogue. I have no
+idea why this has to be the case, or if it's this way outside of AITalk, as I've seen some nonoverlap arrays in Emily4.5's word.dic file, so there may be other
+instances where you have to define them this way...
+
+If you don't know whether an array will be the only one in a certain instance, you might wanna just make it a nonoverlap one to save some pain. Right now I can't 
+think of any noticeable difference between 'array' and 'nonoverlap' declaration, so maybe it's like the difference between declaring 'long' and 'double'; I dunno.
+Either way, I stayed up till 4AM one night because of this. 
+*/
+
+MTAI_Array : nonoverlap
+{
+	"Hmmmm...I could really go for a %(vendingmachine) about now...-drools-\e"
+	//"(Looks like he's reading %(book)...)\e"
+	"Mmmm...I really should've had more than just some %(breakfast) for breakfast... -yawns- %(username), could you get me %(townfruit)...?\e"
+	"I could go for a snack...maybe a %(snack)...\e"
+	"I could go for a snack...maybe some %(snack_2)...\e" 
+	
+	/*Ripped from various games. Expand as you encounter more dialogue?*/
+	"Keep it real. Real chill.\e"
+	"Do you have a favorite place? You know, a place where you can take a midday nap when you're tired? Huh? Oh me? Well, when you're out, sometimes I like to snooze on your floor!\e" 
+	". . . May I chew on your hair?\e"
+	"I was thinking about getting a shoe-shine...\w5 But the shoe guy isn't even here! %(catchphrase)!\e"
+	"I love talking about people! \w5\s[] It's almost as much fun as eating!\e"
+	"I heard this real scary story...Do  you want to hear it? Putting %(breakfast) in %(snack_2)...Produces the flavor of %(snack_2). Ewwwww! It's so creepy and unnatural!\e"
+	"So I wanted to talk to you... But I forgot what I was going to say. Sorry about that. I'll try really hard to remember, %(catchphrase).\e"
+	"I heard a rumor about you today. Everyone is saying you're kind of a %(rumor)! I'm jealous! I wish I were popular enough for people to gossip about, %(catchphrase)!\e"
+	"I was trying to open my drawer with my foot, and I stubbed my toe, %(catchphrase). It hurt so much I cried, but I still want to learn how to do chores with only my feet. It's a long-term goal of mine.\e"
+	"I'm debating about what's the best way to enjoy the kind of weather we're having today. But if I don't hurry up and decide soon, the entire day is gonna be over!\e"
+	"Hey, %(username), guess how many tacos I ate last night? Four? You underestimate me! I had eight! -laughing- Tomorrow I'm gonna try for twelve!\e"
+	"I wonder if Brewster would pour the coffee directly into my mouth if I asked him nicely...?\e"
+	
+	
+	//Pocket Camp Dialogue
+	
+	
+	
+	//fishing Bob array
+	{
+		//fishing Bob
+		"\s[4]"
+		--
+		"Hi, %(username)!  Isn't it a great day to get out and enjoy some fish?\e"
+		"I heard a rumor that some fish in the river are bigger than we are! Isn’t that amazing? Let’s try to catch one sometime (-pride pose-, then thinking) We’ll need a really big fishbowl to put it in, though…\e"
+	}
+	
+	
+	/*Villager-specific dialogue! Some for species, some for personality types!*/
+	
+	//Normal
+	
+	//Peppy
+	
+	//Uchi
+	
+	//Snooty
+	
+	//Lazy
+	
+	//Jock
+	
+	//Smug
+	
+	//Grumpy
+	
+	"I was talking to %(grumpyvillager) earlier about %(snack_2), but he said he'd never had any! -shocked- I can't imagine a life like that, %(catchphrase)!\e"
+	
+	
+	
+	/*ARRAY-PULLING DIALOGUE, or anything that needs specific setup. From word.dic.*/
+	
+	{
+		//I tried to shortcut and just put cs[] in each spot instead of calling them specifically, but if you don't it'll pick a random one for each, so can't escape.
+		_cs = Character_Specialty
+		_specialty = _cs[1]
+		_character = _cs[0]
+	"You know, I was thinking last night about %(_specialty)...Suppose %(_character) would be a good person to ask, now that my mind is clear.\e"
+	}
+}

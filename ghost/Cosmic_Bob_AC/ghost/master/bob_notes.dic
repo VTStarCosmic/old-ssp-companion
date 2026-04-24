@@ -1,0 +1,45 @@
+﻿/*Bob
+
+So after you finish with Meta, you need to write a sim of Bob who functions similarly to ACNL, in that he-
+
+-Reminds you of ACNL festivals/holidays 
+-has items/emotions (file: bootend, menus, conditional files, time-related holiday items?)
+-gets sick 
+-can interact with you
+-can be petted (file: ??)
+-can maybe be slapped with the net/catch fleas (file: ??)
+-have where you can obtain his photo (file: function directory, AITalk conditional)
+-has trust level (file: bootend, function directory, all related uses for dialogue)
+-birthday wish functionality (file: function directory?, AITalk uses, bootend)
+-holiday stuff like lollipops -- REPLACE THE CANDY FUNCTIONALITY WITH THIS (file: function directory, bootend, AITalk conditional)
+-maybe have a certain number of candy generated a day? or if you have to do something to earn it...hmmm...
+-randomly generated villager names, town names, fortunes, foods, books, events, and more! (AITalk, word)
+
+
+Things to do:
+
+bootend: Add variables and set up in open/close files, as well as arrays for them; add in rainy/snowy bob boot
+menu: clean up file
+AITalk: Reading in all the arrays
+Dialogue Files: Creating all arrays to link to AITalk and menus 
+specevents: Finishing all functions and moving to function directory
+function directory: Finalizing all AC events and linking to dialogue files
+MAKE ARRAYS WITH DIALOGUE FOR ALLLLLL THE EVENTS to go in AITalk and the other files
+Make an event/item dialogue array for all misc dialogue to go in
+dialogue and menu priorities for birthday events -- if 'cake' on menu, he asks if you have a wish, and pulls up the box like in nameteach
+Halloween month - candy refreshes quicker, plus lollipops
+Christmas - Bob gift
+
+If you really want, make a function that compares all stats to see if they've been changed with hidden values, like "lastvaltrust" or something.
+Then, you can have a Resetti convo >:D
+You'll need a special balloon and stuff for him too, hahaha
+
+Plans: Write all the conditional dialogue and create arrays, and then go through and link them up in the AITalk and bootend files.
+Attack the menus next, and write all the different menu setups (sick, normal), and make sure everything in there is linked up.
+
+
+
+To draw: Default, hit by net, upset spirals, anger, laughter, big grin, sweatdrops, sick - spirals?, fever, gift giving, gift receiving, 
+
+OH MY GOSH YOU MUST HAVE A SMEXY BOB SKIN (or at least a smexytime joke XD)
+*/

@@ -1,0 +1,544 @@
+﻿/*bootend dialogue arrays
+
+Contents:
+-Months
+-Weekdays
+-Seasonal
+-timeslot value
+-Holidays
+-Nonspecific
+
+Boot arrays first, close arrays second, excluding the cases of birthdays, which will both be at the end of the file.
+*/
+
+//DO ONES FOR SPECIFIC TIMES on days of the week? Like Saturday night, for example.
+
+/*BEGIN BOOT ARRAYS*/
+
+/*Event boots*/
+
+boot_Event_rainy : array
+{
+	"test rain boot dialogue\e"
+}
+
+/*Month-related boots*/
+
+bootArray_Month_1 : array
+{
+	
+}
+
+bootArray_Month_2 : array
+{
+	
+}
+
+bootArray_Month_3 : array
+{
+	
+}
+
+bootArray_Month_4 : array
+{
+	
+}
+
+bootArray_Month_5 : array
+{
+	
+}
+
+bootArray_Month_6 : array
+{
+	
+}
+
+bootArray_Month_7 : array
+{
+	"Hi %(username), how are you? Enjoying your summer?\e"
+}
+
+bootArray_Month_8 : array
+{
+	
+}
+
+bootArray_Month_9 : array
+{
+	
+}
+
+bootArray_Month_10 : array
+{
+	
+}
+
+bootArray_Month_11 : array
+{
+	
+}
+
+bootArray_Month_12 : array
+{
+	
+}
+
+/*Weekday boots*/
+
+bootArray_DayOfWeek_0 : array
+{
+	"It's Sunday...almost time for me to turn in my projects. -sweats nervously-\e"
+}
+
+bootArray_DayOfWeek_1 : array
+{
+	"Oh hi, how are you this Monday...-yawn-\e"
+}
+
+bootArray_DayOfWeek_2 : array
+{
+	"Ah, hi %(username), how are you on this wonderful, blissful Tuesday; I'm so happy I finished those projects last night.\e"
+}
+
+bootArray_DayOfWeek_3 : array
+{
+	
+}
+
+bootArray_DayOfWeek_4 : array
+{
+	
+}
+
+bootArray_DayOfWeek_5 : array
+{
+	"Test dialogue for Friday! How're you, %(username)?\e"
+	"Ahhh, it's Friday, %(nickname). The weekend is almost here <3\e"
+}
+
+bootArray_DayOfWeek_6 : array
+{
+	
+}
+
+/*Seasonal boots*/
+/*Pattern: early_,mid_,late_ + spring/summer/fall/winter*/
+
+bootArray_Seasonal_early_spring : array
+{
+	
+}
+
+bootArray_Seasonal_mid_spring : array
+{
+	
+}
+
+bootArray_Seasonal_late_spring : array
+{
+	
+}
+
+bootArray_Seasonal_early_summer : array
+{
+	"Early summer boot dialogue. When do the fireworks start?\e"
+}
+
+bootArray_Seasonal_mid_summer : array
+{
+	"Mid-summer boot dialogue...must be pretty hot out.\e"
+}
+
+bootArray_Seasonal_late_summer : array
+{
+	"Late summer boot dialogue.\e"
+}
+
+bootArray_Seasonal_early_fall : array
+{
+	
+}
+
+bootArray_Seasonal_mid_fall : array
+{
+	
+}
+
+bootArray_Seasonal_late_fall : array
+{
+	
+}
+
+bootArray_Seasonal_early_winter : array
+{
+	
+}
+
+bootArray_Seasonal_mid_winter : array
+{
+	"Hi %(username), enjoying the winter? I hope you have some snow...but remember to stay warm, okay?\e"
+}
+
+bootArray_Seasonal_late_winter : array
+{
+	
+}
+
+/*timeslot boots*/
+
+bootArray_timeslot_earlymorning : array //5AM-9AM
+{
+	"\0\s[16]Zzzzz\w8\w8.\w8.\w8.\w8Mmmm\w8.\w8.\w8.\w8\w8Oh, hello\w8.\w8.\w8.\w8good morning, %(catchphrase)\w8.\w8.\w8.\w8It's too early\w8.\w8.\w8.\w8\e"
+}
+
+bootArray_timeslot_morning : array
+{
+	"\0\s[16]Mmmmmm\w8...\w8good morning\w8...\w8How're you this morning? Me? I'm still tired, ahuhuhuh.\e"
+}
+
+bootArray_timeslot_lunch : array
+{
+	"Oh, hello. \w8\0\s[6]Visiting me on your lunch break?\e"
+}
+
+bootArray_timeslot_afternoon : array
+{
+	"Hi, %(nickname). You going to have a snack soon?\e"
+}
+
+bootArray_timeslot_evening : array
+{
+	"Hi, %(username), how was your dinner? \w8Mine was uh-mazing.\e"
+}
+
+bootArray_timeslot_latenight : array
+{
+	"Hi, %(username). It's so late!\e"
+}
+
+bootArray_timeslot_midnight : array
+{
+	"Look at how late we're up, %(nickname)! \w8\0\s[12]This makes us totally mature. -pride pose-\e"
+}
+
+/*Holiday boots*/
+/*Month number first, then day, with name.*/
+//maybe game anniversaries and stuff? Iwata?
+
+//New Year's Day 1-1
+boot_1_1 : array
+{
+	"\0\s[6]Oh man, hi buddy! \w8Thank you for stopping in on my birthday, %(catchphrase)! I'm so happy you came by!\e"
+}
+
+//Valentine's Day 2-14
+boot_2_14 : array
+{
+	
+}
+
+//Leap Year 2-29
+boot_2_29 : array
+{
+	if MTTrust > 2
+	{
+	"It's the dedicated leap year date on your planet, isn't it? It...intrigues me, to say the least. I've done some research on your planet to see how it was divided, actually...Interesting to see how the scientific minds of different times think so similarly. But anyway. Happy Leap Day, if that's what you call it.\e"
+	}
+	else
+	{
+	"It's the dedicated leap year date on your planet, isn't it? It intrigues me, to say the least.\e"
+	}
+}
+
+//4-20 
+boot_4_20 : array
+{
+	//meme trigger
+	if ALLOFTHEMEMES == 1
+	{
+		"Oh gosh...how many dank memes can we get away with with YOU at the wheel today? To be honest, you could probably teach me a thing or two...\e"
+	}
+	else
+	{
+	"Oh, hello...I feel...almost as if I should point out what day it is...but I'm not for sure. I sent King Dedede an annoying text, at least.\e"
+	}
+}
+
+//Memorial Day?
+
+//July 4th, US independence day
+boot_7_4 : array
+{
+	"It's the fourth of July. Happy Independence Day!\e"
+}
+
+//New Year's Eve
+boot_12_31 : array
+{
+	//maybe have this change depending on time
+	"Spending New Year's Eve with me? I'm flattered, but...you should probably be with your family or friends, instead.\e"
+}
+
+/*NONSPECIFIC BOOT*/
+
+bootArray_Nonspecific : array
+{
+	//conditionals, trust, etc. in here
+	"Oh, hello there. Good to see you're still alive and hopefully-well.\e"
+	//"!!\nOh, you interrupted me while I was eating my lunch. Just some %(lunch), but...\e"
+	//why is that one not time related.
+	{
+	_string = "Hi %(username), how are you?"
+	--
+	if MTTrust > 4
+	{
+		_string = _string + " ...it's nice to see you."
+	}
+	--
+	"%(_string)\e"
+	}
+}
+
+/*BEGIN CLOSE ARRAYS*/
+
+/*Okay, FUTURE COS AND ANYONE ELSE READING THIS: See how all those lines up there in the boot stuff end with \e? DON'T DO THAT HERE; IT'S ALREADY IN THE CLOSING
+DIALOGUE PRINT-OFF IN THE ACTUAL CODE. If you put one here by accident and there's another ghost on screen, he won't actually close when he reads it; he'll just
+sit there like nothing happened because the \e is the 'end of dialogue' thing. Also, you don't have to put \w8's; I accounted for them as well.
+
+For reference, here's what is tacked onto the end of his dialogue in bootend: "\w8\w8\-\e"*/
+
+/*Event closes*/
+
+close_Event_summersolstice : array 
+{
+	"solstice close"
+}
+
+/*Month-related closes*/
+//as with the month boot arrays, I may not use these since I have the seasonal arrays, but leaving one here to test just to know they work.
+
+closeArray_Month_7 : array
+{
+	"Closing dialogue for July."
+}
+
+/*Weekday closes*/
+
+closeArray_DayOfWeek_0 : array
+{
+	
+}
+
+closeArray_DayOfWeek_1 : array
+{
+	
+}
+
+closeArray_DayOfWeek_2 : array
+{
+	
+}
+
+closeArray_DayOfWeek_3 : array
+{
+	
+}
+
+closeArray_DayOfWeek_4 : array
+{
+	
+}
+
+closeArray_DayOfWeek_5 : array
+{
+	
+}
+
+closeArray_DayOfWeek_6 : array
+{
+	"Goodbye, %(username); enjoy your weekend."
+}
+
+/*Seasonal closes*/
+
+closeArray_Seasonal_early_spring : array
+{
+	
+}
+
+closeArray_Seasonal_mid_spring : array
+{
+	
+}
+
+closeArray_Seasonal_late_spring : array
+{
+	
+}
+
+closeArray_Seasonal_early_summer : array
+{
+	
+}
+
+closeArray_Seasonal_mid_summer : array
+{
+	"Seasonal closing for midsummer."
+}
+
+closeArray_Seasonal_late_summer : array
+{
+	
+}
+
+closeArray_Seasonal_early_fall : array
+{
+	
+}
+
+closeArray_Seasonal_mid_fall : array
+{
+	
+}
+
+closeArray_Seasonal_late_fall : array
+{
+	
+}
+
+closeArray_Seasonal_early_winter : array
+{
+	
+}
+
+closeArray_Seasonal_mid_winter : array
+{
+	
+}
+
+closeArray_Seasonal_late_winter : array
+{
+	
+}
+
+/*Timeslot closes*/
+
+closeArray_timeslot_earlymorning : array
+{
+	
+}
+
+closeArray_timeslot_morning : array
+{
+	"Mmmmh...thank you. This leaves me just enough time to grab a quick nap before getting to work..."
+}
+
+closeArray_timeslot_lunch : array
+{
+	
+}
+
+closeArray_timeslot_afternoon : array
+{
+	
+}
+
+closeArray_timeslot_evening : array
+{
+	if MTTrust > 2
+	{
+		"You weren't going to keep me open to eat dinner? Well, I don't see the point in you watching me eat either, so go get something to eat, okay?"
+	}
+	"Off to enjoy the evening? Well, enjoy yourself, %(username). I'll be productive while you're gone."
+}
+
+closeArray_timeslot_latenight : array
+{
+	"You aren't leaving to bed already, are you? Or are you going out to party? Maybe you have other things to entertain you? Whatever the case, goodbye..."
+}
+
+closeArray_timeslot_midnight : array
+{
+	"Goodnight %(username)...go get some sleep."
+	"Just leaving now? Well, go get some sleep. I have projects to work on."
+}
+
+/*Holiday closes*/
+
+close_1_1 : array
+{
+	"Goodbye %(username)...Happy New Year."
+}
+
+close_2_14 : array
+{
+	
+}
+
+close_2_29 : array
+{
+	
+}
+
+close_3_17 : array
+{
+	
+}
+
+close_4_20 : array
+{
+	if ALLOFTHEMEMES == 1
+	{
+		"Well, goodbye %(username)...Have fun looking up some memes today."
+	}
+	else
+	{
+		"Goodbye %(username). Go enjoy yourself today, all right?"
+	}
+}
+
+close_7_4 : array
+{
+	
+}
+
+close_10_31 : array
+{
+	
+}
+
+close_12_25 : array
+{
+	"Oh, are you leaving to spend some time with your family, I presume? Well, have fun doing that...I suppose I can see what my friends are doing. Merry Christmas, %(username)."
+}
+
+close_12_31 : array
+{
+	"Wait, are you leaving? \w8...No reason; I just...Never mind. Go enjoy the New Year with your family. I'll be fine by myself."
+}
+
+/*NONSPECIFIC CLOSE*/
+
+closeArray_Nonspecific : array
+{
+	//for everything else, like trust conditionals, cookies, angst, etc.
+	"Oh, look at the time! Guess we've both gotta be going, huh. Thanks for spending time with me, %(nickname)!"
+}
+
+shortSessionArray : array
+{
+	"Leaving already, %(username)? Well I hope you had fun! See you later!"
+}
+
+/*BIRTHDAY ARRAYS*/
+
+boot_Birthday : array
+{
+	"It's %(bornmonthprint) %(borndayprint).\w8 Happy birthday, %(username)! Hope it's a good one!\e"
+}
+
+close_Birthday : array
+{
+	"Goodbye, %(username)...hope you have a happy birthday."
+}

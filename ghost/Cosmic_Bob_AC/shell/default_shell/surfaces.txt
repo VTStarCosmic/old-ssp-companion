@@ -1,0 +1,275 @@
+//---------------------------Surfaces.txt--------------------------
+
+//Note to future Cos - you shouldn't use the /**/ here; they break the .txt files apparently.
+
+//There are a lot of crazy tricks you can do with surfaces.txt if you're creative and determined, but you won't have to worry about any of them (although I will include some commented out examples for my own reference). The easiest, easiest way to do this file is simply to replace the images I've already made. There should be around 10 poses for each character defined in surfaces.txt. They break down like this.
+
+//0 - Girl's default pose. This is made up of a few images.
+	//surface0.png, her full default frame with her eyes and mouth in place to layer stuff on.
+	//surface1001.png, her half-closed eyes
+	//surface1002.png, her closed eyes. These two frames are used to make her blinking animation.
+	//surface1101.png, her half-open mouth
+	//surface1102.png, her open mouth. These two frames are used for her talking animation.
+
+
+//ONE MORE NOTE - If you are planning on doing a single person ghost without a sidekick character at all, all you have to do is save a blank png over all the files for the secondary character, ESPECIALLY Surface10.png. Then just don't write any dialogue for the secondary character in the .dic files. Problem solved.
+
+
+//Bob doesn't move much, so maybe make use of below?
+
+//--surface.append-------------------------------------------------------------------
+//This function is primarily for advanced users, so you can skip it if it seems too scary to you. Otherwise, read on. It may be useful.
+
+//Surface.append basically applies the coding within the brackets to the poses specified in the number range. Specifically in this case it applies to collisions. If the collision areas for your ghost don't change very much from pose to pose, then you can set them here for multiple surfaces at once and save yourself some time.
+//I'm not actually going to use surface.append since Girl and Triangle move around too much for their collisions to be that consistent between poses, but it's something could potentially come in handy for advanced users or ghost makers who have very stationary ghosts, so I'll leave it here and just append it to surfaces that don't exist so it won't get in the way. If you want to use this, study this example and see how it can apply to your own ghost.
+
+surface.append500-590 //this is appending this code to Surface500 through Surface590.
+//There are actually a few special ways you can refine this! For example, surface.append500-590,205 would append the code to Surface500 to Surface590, as well as Surface205. 
+//surface.append500-590,205,!507-509 it would do the same, except it would skip Surfaces507 through 509.
+//you can have multiple surface.appends as well, if you want to append one set of code to one range of surfaces and another to another. For example, one set of collisions to your main character and one to your side character.
+{
+collision0,15,16,111,48,Face
+collision1,40,50,102,84,Point
+
+//I talk about collisions a bit more in detail just below when we go into surface0, so I won't get too much into the exact nature of a collision up here. Because this is under surface.append, that means that these collisions are being set for every surface between the number range specified, in this case every Surface from 500 to 590.
+
+}
+
+
+//--The Main Character's Poses---------------------------------------------------------
+
+surface0
+//surface0 is the basic default pose for your main character. I'll include a few examples of things you can do in this pose, but you won't have to use any of them if you don't want to. They're mostly for (my) reference and advanced users for the most part.
+{
+collision0,57,22,112,46,Head
+collision1,65,50,105,91,Face
+
+//Collisions define "hot spots" on your ghost where the user can pet or double click them (as defined in mouse.dic). You can see that there are two collisions here, collision0 and collision1. You can add more by copypasting and raising the number, like collision2, collision3, collision4, and so on.
+//The four numbers after that are x/y coordinates. Specifically, the first two numbers are the x/y coordinates of the TOP LEFT corner of your hotspot. The third and fourth numbers are the coordinates of the BOTTOM RIGHT corner of the hotspot. Essentially, this is outlining a rectangle.
+//To find the hotspot on your ghost, first draw a rectangle on your image where you want the hotspot. Like the top of their head for petting. Then get the coordinates of the top left corner of that rectangle. You can do this in Photoshop with the Info tab I believe, or if you open the image up in MSPaint, it should tell you the coordinates in the bottom bar. Point your cursor at that corner, write those coordinates down, and put them in here. In this case, it was 57,22. Then do the same with the bottom right corner - 112,46. I show what some of these rectangles look like in the surfaces.txt section of the walkthrough.
+//After that, you have to name the area you highlighted. In collision0's case, the area is named "Head". If you go into mouse.dic, you'll see that this name is referenced when the mouse is over that area or interacting with it. Remember what word you use for what area. You can call the areas whatever you want, just make sure it's consistent between surfaces.txt and mouse.dic.
+//Then basically repeat this for any other collisions you may want to set up. You can have as many collisions as you want for as many places on your ghost as you want!
+
+//Collisions only apply to the Surface they're in, unless they're appended using surface.append in the above section. This means you can have certain collisions that only appear in certain poses, like giving your character a high five when their hand is up. You can be creative with these.
+
+//If you REALLY can't figure out collisions and just can't get them to work, you can delete the two collision lines. This will make your ghost un-pettable though and much of what you defined in mouse.dic won't work. Their menus should still function though I think. But if you are desperate, this is an option.
+
+element0,overlay,surface0.png,0,0
+//THE PROBLEM: I really want two default poses: surface0 and surface1.
+//THE SOLUTION: ??? 
+
+//Here is the line of code that defines the base image we'll be using for the ghost. If you aren't just replacing my images and moving on, you'll want to replace the surface0.png part with whatever image file you're using as your base pose. But really, your base default pose should ALWAYS be surface0.png for your main character. There are very few situations where this line would need to be changed in any way. Likewise, I wouldn't change it for your secondary character's default pose either.
+
+
+//*********************Advanced User Info*******************************
+//These text boxes are meant for those who have an interest in expanding or using more complicated functions in their ghost. Also for my own reference in the future since I plan on using this template too, haha. If you have no interest in any of this and just want to keep things as simple as possible, feel free to skip these boxes.
+
+//***********************************************************************
+
+
+//--Blinking---------------------------------------------------------------------------
+//Here's the animation block to set up a random blink.
+
+//0interval,random,4
+//0pattern0,-1,10,overlay,0,0
+//0pattern1,1002,5,overlayfast,0,0
+//0pattern2,1001,10,overlayfast,0,0
+//0pattern3,-1,3,overlay,0,0
+
+//For those just replacing my images, you won't have to mess with any of this. Just be sure that your blink frames look like my blink frames. For those who are going to reuse this block or do their own thing, all you need to do is replace 1001 and 1002 with the file numbers of your new blink frames. Everything else can stay exactly the same.
+//I could explain exactly what each line means and how it breaks down, but that's not really information that's super necessary for what you're going to be doing. Someday when I finish the whole ghost site, I'll have a specific page about surfaces.txt breaking down exactly how all this works, but for now, we're shortcutting a little. I will very briefly explain it though. If this is confusing, don't worry too much about it right now.
+//You can think of an "interval" as a set block defining an animation, like a blink in this case, and you'll notice each interval is followed by a number of lines starting with "pattern". The pattern lines are the frames that make up the animation. I've seen this described once like interval is a paragraph, and pattern are the lines of the paragraph.
+//Anyway, the front number of the interval matches the front number of the pattern associated with it - 0interval, 0pattern. The number after pattern is the frame number, in this case going up to frame 3 - 0pattern1, 0pattern2, 0pattern3. The number after that is the image you're using - 1002, the number after that is the delay on the frame before it - 5. The word after that is the animation method you're using for the frame, in this case a mix of overlay and overlayfast, and the last two numbers are the x/y coordinates of the images - 0,0.
+//Other animation methods besides overlay and overlayfast are base, move, and replace. More on those below.
+
+
+//--Talking-----------------------------------------------------------------------------
+//This block deals with your ghost's mouth moving as it speaks to you. 
+
+//1interval,talk,4
+//1pattern0,0,0,alternativestart,[2.3.4]
+
+//You can see some unique things about this block. The interval is set to talk,4, which means it'll run for every four characters or so that appear in the balloon. You can change 4 to a different number but there's no reason to, I wouldn't do it myself.
+//Below that line, you can see alternativestart, then some numbers in some brackets. What this does is that it will randomly select an interval with that number as it runs. Look below, do you see the intervals numbered 2, 3, and 4? Those are the intervals this animation will call. You can add numbers to those brackets or take them away if you want, so you could do things like [2.3.4.5] or [2.3] or whatever.
+
+//2interval,never
+//2pattern0,1102,10,overlay,0,0
+//2pattern0,1101,13,overlay,0,0
+//2pattern1,-1,10,overlay,0,0
+
+//3interval,never
+//3pattern0,1101,14,overlay,0,0
+//3pattern1,-1,10,overlay,0,0
+
+//4interval,never
+//4pattern0,1102,14,overlay,0,0
+//4pattern1,-1,10,overlay,0,0
+
+//These three intervals handle the talk frames. For those who are doing their own thing or adding talk frames to their other Surfaces, all you need to do is copy and paste the talk blocks (1interval to 4interval) into the Surface you want and replace 1101 and 1102 with the appropriate file numbers for your new talk frames. You can leave the rest of it alone. Those just replacing my images don't have to worry about any of this, as long as your mouth frames look like mine.
+
+//IF YOU ABSOLUTELY CAN'T GET THE BLINKING/TALKING FRAMES TO LOOK RIGHT
+//If it comes to that, you can delete those chunks of code and just leave surface0 like the other simple poses below. 
+//If you do do this, make sure to delete the blinking/talking .png files as well to clear up any error messages that may come up as a result of them not being used.
+
+//At the time of finalizing this ghost, I have done very little artsy stuff. All the art for the shell is supplied by my friend Celestia-Knight.
+//Therefore, I've removed a lot of the more intense image-related stuff here, since I likely won't be utilizing it in the next few years, if at all.
+//If you're curious about more things to do with the shell, go check out zarla's tutorial as mentioned in the readme. She breaks down everything there.
+}
+
+//CHARACTER POSES
+
+//MC 1 - Default 2 - Chilling Bob
+surface1 
+{
+	element0,overlay,surface1.png,0,0
+}
+
+//MC 2 - Music Notes Dance
+surface2
+{
+	element0,overlay,surface1000.png,0,0
+}
+
+//MC 3 - Bug Net
+surface3
+{
+	element0,overlay,surface1001.png,0,0
+}
+
+//MC 4 - Fishing Rod 
+surface4
+{
+	element0,overlay,surface1002.png,0,0
+}
+
+//MC 5 - Shocked 
+surface5
+{
+	element0,overlay,surface1003.png,0,0
+}
+
+//MC 6 - Happy Blink
+surface6
+{
+	element0,overlay,surface1004.png,0,0
+}
+
+//MC 7 - Heart
+surface7
+{
+	element0,overlay,surface1005.png,0,0
+}
+
+//MC 8 - Lightbulb
+surface8
+{
+	element0,overlay,surface1006.png,0,0
+}
+
+//MC 9 - Sneaky Stars
+surface9
+{
+	element0,overlay,surface1007.png,0,0
+}
+
+//DON'T USE 10 COS!
+
+//MC 11 - Laughter
+surface11
+{
+	element0,overlay,surface1008.png,0,0
+}
+
+//MC 12 - Proud Pose
+surface12
+{
+	element0,overlay,surface1009.png,0,0
+}
+
+//MC 13 - ? Expression
+surface13
+{
+	element0,overlay,surface1010.png,0,0
+}
+
+//MC 14 - Sad Spiral
+surface14
+{
+	element0,overlay,surface1011.png,0,0
+}
+
+//MC 15 - Sweaty/Fever
+surface15
+{
+	element0,overlay,surface1012.png,0,0
+}
+
+//MC 16 - Sleepy Bob
+surface16
+{
+	element0,overlay,surface1013.png,0,0
+}
+
+//MC 17 - ! Expression
+surface17
+{
+	element0,overlay,surface1014.png,0,0
+}
+
+
+
+
+
+
+//--Unique Collision cursors------------------
+
+//If you messed with the default Emily ghost at all, you may have noticed that when your cursor was over her chest, it changed to a sort of gripping hand instead of a pointer finger. "How do I do that?" you may wonder. Setting up sakura.cursor is how!
+
+//sakura.cursor 
+//{ 
+//mouseup0,Head,system:hand 
+//mousedown0,Head,system:finger 
+//mouseup1,Face,system:hand 
+//mousedown1,Face,system:grip 
+//} 
+
+//What this does is change the mouse cursor. You can see it's split into mouseup and mousedown, and it uses the names you gave your Collisions up there. So when the mouse is hovering over Girl's head, it uses the system cursor that looks like a hand. When you click and hold, it looks like a finger. You can uncomment these lines to see for yourself. Likewise, when you hover your mouse over Girl's face, it looks like a hand, and when you click down, it looks like a gripping hand. You can keep adding unique cursors for all your collisions by sequentially numbering them, like mouseup/down2, mouseup/down3, and so on.
+
+//The system cursors you can use for this are "arrow", "cross", "no", "hand", "grip", "finger", "wait", "text", "move", and "help". You can probably guess at what they look like. Feel free to use whatever cursor you think would best match your collision.
+
+//To set this up for the secondary character, just change sakura to kero, as usual.
+
+
+//--Tooltips------------------
+
+//Maybe you'd like a tooltip to pop up when your user is hovering over a hitbox on your ghost. It works much the same as above!
+
+//sakura.tooltips 
+//{ 
+//Head,This is Girl's head. 
+//Face,This is Girl's face.  
+//}
+
+//Basically put the name of your collision first, then what you want the tooltip to say. Uncomment this function and hover over Girl's hotspots and you can see how it works. It may be handy for warning your users about punching your ghost or something, or for silly reasons, I dunno. It's up to you!
+//Like above, replace sakura with kero for the secondary character.
+
+
+//--Surface.alias------------------
+
+
+//There is another function along the same lines of surface.append and it's surface.alias. What it does is assign a range of numbers to a single number or word that can be called using \s[]. So here's an example.
+
+//sakura.surface.alias
+//{
+//6666,[1229,1230,1231,1235]
+//}
+
+//What this means is that I could then go \s[6666] in dialogue and it would call any of these four Surfaces in the brackets. You can do words as well, like creepy,[1229,1230,1231,1235], and then you could call it with \s[creepy]. This may sound like a convenient shortcut to using words instead of numbers for your ghost's expressions, but I'd probably stick with numbers, really. It just feels like it'd backfire on you eventually.
+//You can do the same thing with the side character by using kero instead of sakura.
+
+//kero.surface.alias
+//{
+//6667,[1228,1232,1233]
+//6668,[1228,1232,1233,1234]
+//}
+//And as you can see, you can have multiple surface aliases set up at any point. In this example, kero has both 6667 and 6668 defined as a range of Surfaces. So \s[6667] would call one of those three Surfaces, and \s[6668] would call one of those four Surfaces.

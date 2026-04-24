@@ -1,0 +1,576 @@
+﻿//menu.dic
+/*This file is, as per the name, for the main chat menu that appears upon double-clicking.
+There should be minimal dialogue here, but there's many one-offs that I have to account for
+here. Personal menu for right-click is NOT INCLUDED HERE!*/
+
+//To-do: If you can change the menu to run from text arrays in the updates file, updating the menu is free.
+//We could just put the menu builder in the update file...but what to do about OpenSakuraMenu?
+
+/*I need to acknowledge the elusive 'lastTalk' variable here. I assumed it was written by a professional, since
+it was in camelcase. I also assumed that pro accounted for it in SSP. It appears that was merely an illusion.
+lastTalk was actually made by presumably the second-gen author, and isn't tracked by SSP. It was only called in
+AITalk. If you want it to repeat dialogue said in menus, you have to do  it manually.*/
+
+/*OpenSakuraMenu calls the MenuRun function to DISPLAY the actual menu.  Since it's calling the MenuRun function itself, 
+it keeps any pre-menu dialogue from cluttering the actual menu display function. If you don't want dialogue with the menu,
+then you can just call MenuRun wherever you want and not have to deal with this.
+Beautiful.
+For those of you with no prior coding experience, it's possible to create multiple menus.
+This is what SickMenuRun does--it's a completely different menu.*/
+OpenSakuraMenu
+{
+	//This if/else block sifts through all the custom stuff I added.
+	//Because they have different priority levels I can't enforce,
+	//we check Curr_Event first since it's highest priority.
+	if Curr_Event == "sickbob"
+	{
+		"\0\s[15]..."
+		--
+		//Here's the SickMenu I was bragging about. Simple. Easy.
+		SickMenuRun
+	}
+	//If Bob's upset, you can't interact, so we just don't call the menu.
+	elseif mood == "Upset"
+	{
+		//IS THIS EVER USED?? CHECK!!
+		"\0\s[14]\b2I'm sorry, %(username). \w8I just don't feel like talking.\e"
+		//change balloon and add an array here
+	}
+	else
+	{	
+		//Checks things like items and interaction stats 
+		if cookie == 1
+		{
+			"\0\s[13]\b2Do you have any more cookies?"
+			--
+			MenuRun
+		}		
+		//If you've talked a lot and tally it, mention here
+		
+		//Normal opening dialogue
+		"\0\s[0]\b2Hi, %(username)!"
+		"\0\s[0]\b2Oh, hi, %(nickname)!"
+		//We only need 5-6 of these, so do we need an array?
+		//No. It's too overkill for basic stuff.
+		--
+		MenuRun
+	}
+}
+
+/*Behold, my beautiful menu generation function...composed of if/else's.*/
+MenuRun
+{	
+	//Get time/date for display
+ 	wd = GetWeekDay
+ 	ap = GetAP
+ 	nowmin = Getnowmin
+ 	nowhour = Getnowhour
+	--
+	"\n\n\_q\b2" //quick session makes it all appear instantly
+	--
+	//If lastTalk's been set/tracked, you can ask to see it in the menu.
+	if lastTalk != ""
+	{
+	  "\![*]\q[Repeat Last Dialogue,OnLastTalk]\n\n[half]"
+	  "\![*]\q[Could you repeat that?,OnLastTalk]\n\n[half]"
+	  //"\![*]\q[What did you say?,OnLastTalk]\n\n[half]"
+	 }
+	--
+	//Runs AITalk.
+ 	"\![*]\q[Say something,OnAITalk]\n"
+	//"\![*]\q[Talk to me,OnAItalk]\n"
+	//Despite being able to write multiple menu dialogue options 
+	//everywhere else, you can't do it for AITalk for some dumb reason...
+	--
+	//If a current event is occurring (NOT GUARANTEED ON RUNTIME), allows
+	//user to talk about it, otherwise don't display.
+	if Curr_Event != ""
+	{
+	"\![*]\q[What's happening lately?,event]\n"
+	}
+	--
+	//Item option.
+	"\![*]\q[Items & Interaction,itemselect]\n"
+	--
+	//Hobbies option.
+	"\![*]\q[Ask about hobbies,OnHobbyMenuDisp]\n"
+	--
+	//A new line break wasn't enough, so I put in a spacer too.
+	"...\n"
+	--
+	//These are self-explanatory--I did minimal work here; they weren't important to me.
+	//DON'T COMMENT IN THE MIDDLE OF THESE; THEY'RE IN A QUOTE!
+	"\![*]\q[Metadata,OnMTDataPull_Comprehensive]\n/
+	\![*]\q[Settings & Configuration,configuration]\n/ 
+	\![*]\q[SSP Bonus Functions,dosomething]\n\n[half]/
+ 	\![*]\q[Cancel,CANCEL]\n\n\n[half]%(wd) %(nowhour):%(nowmin) %(ap), %(month)/%(day)/%(year)\e" 
+	//Do I want to use all those? Decide later. Delete Metadata for public release.
+}
+
+/*I'm entertaining the thought of making all the menus arrays like the character ask one, but since there are so many if's,
+I'm not sure if it will work properly. Plus, seeing that I only have two main menus as of now, there's not really a reason 
+to do so now...but I'll leave this here for my own reference in the future.
+
+UPDATE: Theoretically this could be more efficient for the sick menu, depending on how you structure it with your if's.*/
+Menu_Array_MAINMENU : array
+{
+	//function is below!
+	//multiple reponses should work in brackets; if-else as well?
+	"What's happening lately?.event"
+	"Configuration Menu.configuration"
+	"Items & Interaction.itemselect"
+	"Ask About Hobbies.OnHobbyMenuDisp"
+	"Metadata.OnMTDataPull_Comprehensive"
+	"Functions.dosomething"
+}
+
+/*OnMainMenuDisp
+{
+	_disparray = GetMainMenuArray
+	
+	//like the character menu display, with the loop and everything, but with cancel options under '--'
+}
+
+GetMainMenuArray
+{
+	/*ALL OF THE IF STATEMENTS. Lots of array ,= element. Append EVERYTHING IN DESCENDING ODRDER, in the form "item1,item1menucommand" so that it reads in
+	like the character select array too.
+	
+	make sure you return the temporary array by stating it at the bottom, ex. _array
+	"\n\_q"
+	--
+	
+}*/
+
+/*Stuff for the sick menu.
+I COULD just mod the regular menu functions to account for him being sick...Either way works.
+I just like this way because it keeps it condensed for testing.*/
+SickMenuRun
+{
+	wd = GetWeekDay
+ 	ap = GetAP
+ 	nowmin = Getnowmin
+ 	nowhour = Getnowhour
+	//all of the variables
+	--
+	"\n\n\_q\b2" //quick session
+	--
+	if lastTalk != ""
+	{
+	/*This function appears when the ghost has said something from AITalk beforehand, by default. If you want it to include menu response dialogue,
+	you'll have to define them manually by setting them to lastTalk*/
+	  "\![*]\q[Repeat Last Dialogue,OnLastTalk]\n\n[half]"	  
+	}
+	--
+ 	"\![*]\q[Say something,OnAITalk]\n"
+	--
+	"\![*]\q[Eat something,sickbab]\n"
+	--
+	"\![*]\q[Items & Interaction,sickitemselect]\n"
+	--
+	"...\n"
+	--
+	"\![*]\q[Cancel,CANCEL]\n\n\n[half]%(wd) %(nowhour):%(nowmin) %(ap), %(month)/%(day)/%(year)\e" 
+}
+
+Select.sickitemselect
+{
+	OnSickItemMenu
+}
+
+OnSickItemMenu
+{
+	"[Items:]\n"
+	--
+	"\![*]\q[Candy,sickCandy]\n"
+	--
+	if givenMedicine != 1
+	{
+	"\![*]\q[Medicine,Medicine]\n"
+	}
+	--
+	if givenBlanket != 1
+	{
+	"\![*]\q[Blanket,Blanket]\n"
+	}
+	--
+	"\![*]\q[Cancel,BACKTOMENU]\e"
+}
+
+//Sick variables from Item Menu
+
+Select.sickCandy
+{
+	OnSickItemGive
+}
+
+Select.Medicine
+{
+	OnSickItemGive
+}
+
+Select.Blanket
+{
+	OnSickItemGive
+}
+
+//Add more dialogue here.
+OnSickItemGive
+{
+	if reference0 == "sickCandy"
+	{
+		"I like candy, but I'm not really feeling well right not, %(nickname)...maybe later.\e"
+	}
+	elseif reference0 == "Medicine"
+	{
+		"Some medicine? Thank you so much, %(username). -drinks- Ugh, it tastes icky...but hopefully I'll feel better soon! Thanks, %(catchphrase)!\e"
+		sickhelp += 1
+	}
+	elseif reference0 == "Blanket"
+	{
+		"A blanket...? Thanks, %(catchphrase). I don't feel as cold now.\e"
+		sickhelp += 1
+	}
+	else
+	{
+		"An error has occurred in OnSickItemGive.\e"
+	}
+	sickhelp += 1
+}
+
+Select.sickbab
+{
+	if foodtally <= 3
+	{
+		sickhelp += 1
+	"Thank you...It's nice to have something to eat, even if I'm not very hungry...\e" //soup icon? or various foods
+	}
+	else
+	{
+		"I'm full now...but thank you for all the food, %(catchphrase).\e"
+	}
+}
+
+//Below is material for the normal menu. 
+Select.itemselect
+{
+	OnItemMenu
+}
+
+Select.event
+{
+	EventChat
+}
+
+OnItemMenu
+{	
+	//"\0\v Some text." what does \v do?
+	
+	//parallel Character_Dedede
+	//HAHAHAHA.  I'M UNSTOPPABLE. Now I can use this with RNG so that when he reaches higher levels, he doesn't reuse as much intro-level dialogue.
+	//Update: I no longer remember what the above was for. The dialogue still repeats itself way too often.
+
+	"[Items:]\n"
+	--
+	//use for loop to print the items, and then their separate functions
+	"\![*]\q[Candy,Candy]\n"
+	--
+	"\![*]\q[ShellTestPotato,ShellTestPotato]\n" //Remove for public release
+	--
+	//If there's an active delivery--WAS THIS EVER IMPLEMENTED?
+	if deliveryflag == 1
+	{
+	"\![*]\q[Delivery,Delivery]\n"
+	}
+	--
+	"\![*]\q[Cancel,BACKTOMENU]\e"
+}
+
+//Variables from regular Item Menu
+
+Select.ShellTestPotato
+//note, \w5 
+{
+	"\s[2] Ya-YEET!\e"
+	"\s[3] Ya-YEET!\e"
+	"\s[4] Ya-YEET!\e"
+	"\s[5] Ya-YEET!\e"
+	"\s[6] Ya-YEET!\e"
+	"\s[7] Ya-YEET!\e"
+	"\s[8] Ya-YEET!\e"
+	"\s[9] Ya-YEET!\e"
+	"\s[11] Ya-YEET!\e"
+	"\s[1] Ya-YEET!\e"
+	"\s[12] Ya-YEET!\e"
+	"\s[13] Ya-YEET!\e"
+	"\s[14] Ya-YEET!\e"
+	"\s[15] Ya-YEET!\e"
+	"\s[16] Ya-YEET!\e"
+	"\s[17] Ya-YEET!\e"
+	catchphrase = "phthhhh"
+}
+
+Select.Candy
+{
+	OnItemGive
+}
+
+Select.Delivery
+{
+	OnItemGive
+}
+
+Select.Angstpoints
+{
+	OnItemGive
+}
+
+//Handles item interactions, specifically. Need to add more.
+OnItemGive
+{
+	if reference0 == "Candy"
+	{
+		if candycount > 0
+		{
+		cumulative_candies += 1
+		candycount -= 1
+		//should be parallel EVAL("")
+		
+		"Candy, huh? \w5 \s[11] You know me too well, %(catchphrase)! \w5 Ahuhuhuh!\e"
+		}
+		else
+		{
+			"(You don't have any candy to give!)\w5\e"
+			//SSP doesn't seem to be able to handle negative numbers here, so you don't have to worry about going below 0.
+		}
+	}
+	elseif reference0 == "Delivery"
+	{
+		parallel EVAL("Delivery_Array")
+		deliveryflag = 0
+	}
+	else
+	{
+		"An error has occured in OnItemGive.\e"
+	}
+}
+
+//Set this so that if there's no event, it doesn't blank out. Or change it in boot. Add weather effects in as an RNG function every hour
+EventChat
+{
+	_eventString = EVAL("Event_%(Curr_Event)")
+	"%(_eventString)\e"
+}
+
+/*For those with no programming experience, the below function may seem confusing. What's essentially happening here is  
+simple--I'm putting clean lines to separate the menus into the menu, while also displaying the entire menu and formatting it.
+The menu choices and functions are stored as strings in an array, and this function appends the menu formatting onto them
+while also splitting off the function part. If you're not into coding, this isn't a complication you wanna make,
+but if you know what you're doing, it allows for some slick copy and pasting, and easy formatting.*/
+OnHobbyMenuDisp
+{
+	//put a for loop in here to print out the characters
+	//or maybe build a menu display function that reads in menu arrays, sizes them, for loops, and links to their functions
+	"Ask about:\n\_q"
+	--
+	_txt = ''
+	_array = Menu_Array_BobHobbies //work smarter, not harder--you can copy the code and only change this name for the display if you have multiple menus like this.
+
+	for _i = 0; _i < ARRAYSIZE(_array); _i++ //no () makes me cry
+	{
+		if _array[_i] == "-" //replaces '-'s in the array with this pretty divider. You can change either marker or divider to whatever you want.
+		{
+			_txt += "\n\────────────────────────"
+		}
+		else
+		{
+			_split = SPLIT(_array[_i],".")
+			_txt += "\n\![*]\q[%(_split[0]),%(_split[1])]"
+		}
+	}
+	_txt
+}
+
+//RANT - READ FOR APP PORT
+/*For mega dumb reasons, I can't call OnDialogue to get out of writing 'Select.' for every single menu option. It is incredibly stupid.
+But for some reason, calling OnDialogue causes SSP to crash EVEN THOUGH IT'S A BUILT-IN FUNCTION.
+The shiori3 file is different from the original developers' file. However, I have no way of knowing if it's an update on their end,
+or a modification from one of the 3+ previous code authors passing this around from 2002. 
+I can't read Japanese or Korean, and it's not commented well enough for me to understand.
+
+Because comparing all the information from shiori3 to the old shiori3 and all the code moved from the previous authors would take a LONG
+while, I'm keeping things this way for the SSP release, and putting OnDialogue as its own function when I release this with a real language.*/
+
+//orrrr I could just copy the devs' ghost and painfully replace it with everything here...also an option
+
+/*OnChoiceSelect
+{
+	EVAL("OnChoiceSelect_%(reference[0])")
+}*/
+
+//if I use OnChoiceSelect though, I feel that I'd have to change this for all the second options after the comma in clickable choices...
+//This function is definitely defined somewhere. SSP crashes when I leave it in the code as is, but it's never used, so it must be defined twice then...
+//...but where? Using code from art majors in multiple countries just isn't fun.
+//maybe the previous user redefined it to mean 'Select.' instead of 'OnChoiceSelect_'? That's just weird... Maybe it's outdated syntax.
+
+//Old tidbit of good practice from my beta ghost release
+/*TO ADD A NEW CHARACTER:
+-Add them to the CharacterList array
+-Make a Select.-character name- here and call OnCharDialogue in it
+-Make a properly-named array for them in the character dialogue file.*/
+
+Select.Fishing
+{
+	OnHobbyDialogue
+}
+
+Select.Eating
+{
+	OnHobbyDialogue
+}
+
+Menu_Array_BobHobbies : array
+{
+	"-"
+	"Fishing.Fishing"
+	"Eating.Eating"
+}
+
+OnHobbyDialogue //This is the same functionality as OnCharDialogue from my Meta Knight ghost, if he ever gets published.
+{
+	if ISFUNC("Hobby_%(reference0)")
+	{
+		_array = EVAL("Hobby_%(reference0)")
+		_text = _array[RAND(ARRAYSIZE(EVAL("Hobby_%(reference0)")))]
+		"%(_text)"
+		lastTalk = _text //IF YOU DON'T ADD lastTalk HERE, NOTHING YOU SAY IN MENUS WILL BE REPEATABLE
+	}
+	else
+	{
+		"An error has occurred in OnHobbyDialogue.\e"
+	}
+}
+
+Hobby_Fishing
+{
+	"test fishing dialogue\e"
+}
+
+Hobby_Eating
+{
+	"test eating dialogue.\e"
+}
+
+//puts lastTalk in the quotes. Doesn't it already end with \e?
+OnLastTalk 
+{
+	"%(lastTalk)\e"
+}
+
+//Calls MenuRun if somebody hits an option with the function BACKTOMENU. 
+Select.BACKTOMENU
+{
+	MenuRun
+}
+
+Select.configuration
+{
+	OnTalkConfig
+}
+
+/*Select.testselect
+{
+	"If this works, you should be able to input your name here. \![open,inputbox,OnNameTeach,-1]\e"
+	//well it works, soooo keep this in mind
+}*/
+	
+OnChoiceTimeout
+{
+	"...\e"
+}
+
+//There's an option to include a second character, but I'm poor and can't afford paying for 
+//all the extra images I'd need for that, so I'll leave it here for reference.
+
+//CREDIT: This is all left over from zarla's tutorial. It's the only pseudo-documentation I have.
+/*
+ //---- Secondary Character Menu ---------------------------------------------------------
+OpenKeroMenu
+ {
+	"\1\s[10]\b[2]"
+ 	--
+	"This is a menu introduction dialogue."
+ 	--
+	"\n\n[half]/
+	\![*]\q[Update,keroupdatecheck]\n/
+ 	\![*]\q[Bug report,bugreport]\n\n/
+	\![*]\q[Nothing,keroCANCEL]\e"
+}
+
+//In mine for example, Hunter has some games, a pseudo-FAQ for users, a bug report, an update option, and most importantly, a test variable. A lot of that is fairly complicated though, so I won't get into it here. Advanced Users can pick up Hunter and Smoker and study their menu.dic to see how I did it though, and those who read the coding page of the walkthrough and want to make their own functions can feel free to add them here. 
+//For the purposes of this simple template, I'll include two options that may come in handy - an update option and a bug report option, as well as the test variable.
+
+//If you click cancel. Replace dialogue as you want.
+Select.keroCANCEL
+{
+	"\1\s[10]This is menu cancel dialogue.\e"
+}
+
+//This is when they select bug report. This is mostly meant to briefly give the user information about you, the creator, and how to report a problem to you. This can be handy if the person forgot where they got their ghost or how to contact you. Add whatever info you like here.
+Select.bugreport
+{
+	"\1\s[10]This is the bug report dialogue. \w5Report bugs to youremailaddress@emailprovider.com. \w5We were downloaded from \_a[http://www.whereveryoupostedthem.com/]some place\_a.\e"
+}
+
+//When clicked, this will automatically tell the ghost to check for updates. More detail on updates in etc.dic. You can leave this alone.
+Select.keroupdatecheck
+{
+	"\1\s[10]\![updatebymyself]\e"
+}*/
+
+//Begin the obligatory date/time formatting stuff.
+GetWeekDay
+{
+	if weekday == 0
+	{"Sunday"}
+	elseif weekday == 1
+	{"Monday"}
+	elseif weekday == 2
+	{"Tuesday"}
+	elseif weekday == 3
+	{"Wednesday"}
+	elseif weekday == 4
+	{"Thursday"}
+	elseif weekday == 5
+	{"Friday"}
+	else
+	{"Saturday"}
+}
+
+GetAP
+{
+ 	if hour >= 0 && hour <= 11
+ 		{
+ 			"AM"
+ 		}
+ 	else
+ 		{
+ 			"PM"
+ 		}
+}
+
+Getnowmin
+{
+	if minute >= 0 && minute <=9
+	{"0%(minute)"}
+	else
+	{"%(minute)"}
+}
+
+Getnowhour
+{
+	if hour12 >= 0 && hour12 <=9
+	{"0%(hour12)"}
+	else
+	{"%(hour12)"}
+}
